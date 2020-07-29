@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Стас Новиков](https://up.htmlacademy.ru/ecmascript/12/user/681261).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Глазков](https://htmlacademy.ru/profile/id1194253).
 
 ---
 

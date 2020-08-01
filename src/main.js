@@ -13,40 +13,40 @@ const EXTRA_CONTAINER_AMOUNT = 2;
 const CARDS_IN_EXTRA_BLOCK_AMOUNT = 2;
 
 const render = (container, template, place) => {
-	container.insertAdjacentHTML(place, template);
+  container.insertAdjacentHTML(place, template);
 };
 
-const siteHeader = document.querySelector('.header');
+const siteHeader = document.querySelector(`.header`);
 render(siteHeader, createProfileTemplate(), `beforeend`);
 
-const siteMain = document.querySelector('main');
+const siteMain = document.querySelector(`main`);
 render(siteMain, createNavigation(), `beforeend`);
 render(siteMain, createSort(), `beforeend`);
 render(siteMain, createFilmsContainer(), `beforeend`);
 
-const filmList = siteMain.querySelector('.films-list')
-const cardsContainer = filmList.querySelector('.films-list__container');
+const filmList = siteMain.querySelector(`.films-list`);
+const cardsContainer = filmList.querySelector(`.films-list__container`);
 for (let index = 0; index < CARDS_AMOUNT; index++) {
-	render(cardsContainer, createFilmCard(), `beforeend`);
+  render(cardsContainer, createFilmCard(), `beforeend`);
 }
 
-render(cardsContainer, createShowMoreButton(), `afterend`);	
+render(cardsContainer, createShowMoreButton(), `afterend`);
 
-const filmContainer = siteMain.querySelector('.films');
+const filmContainer = siteMain.querySelector(`.films`);
 
 for (let index = 0; index < EXTRA_CONTAINER_AMOUNT; index++) {
-	render(filmContainer, createExtraFilmBlock(), `beforeend`);
-};
+  render(filmContainer, createExtraFilmBlock(), `beforeend`);
+}
 
-const extraFilmContainers = siteMain.querySelectorAll('.films-list--extra');
-extraFilmContainers.forEach(element => {
-	const containerToInsertCards = element.querySelector('.films-list__container');
-	for (let index = 0; index < CARDS_IN_EXTRA_BLOCK_AMOUNT; index++) {
-		render(containerToInsertCards, createFilmCard(), `beforeend`)
-	}
+const extraFilmContainers = siteMain.querySelectorAll(`.films-list--extra`);
+extraFilmContainers.forEach((element) => {
+  const containerToInsertCards = element.querySelector(`.films-list__container`);
+  for (let index = 0; index < CARDS_IN_EXTRA_BLOCK_AMOUNT; index++) {
+    render(containerToInsertCards, createFilmCard(), `beforeend`);
+  }
 });
 
-const siteFooter = document.querySelector('.footer');
+const siteFooter = document.querySelector(`.footer`);
 render(siteFooter, createStatistic(), `beforeend`);
 
-// render(siteMain, createDetailInfo(), `beforeend`);
+render(siteMain, createDetailInfo(), `beforeend`);

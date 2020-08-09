@@ -1,3 +1,28 @@
+import {
+  filmCardMock,
+  generateDescription,
+  generateCommentsObj,
+  getRandomArrayEl} from "../mock/fillm.js";
+
+const AMOUNT_OF_CARDS_TO_GENERATE = 15;
+
+const generateFilmData = function () {
+  return {
+    title: getRandomArrayEl(filmCardMock.filmsTitels),
+    poster: getRandomArrayEl(filmCardMock.filmsPosters),
+    description: generateDescription(filmCardMock.filmDescription),
+    comments: generateCommentsObj(),
+  };
+};
+
+const generatedArrayCards = [];
+
+for (let i = 0; i < AMOUNT_OF_CARDS_TO_GENERATE; i++) {
+  generatedArrayCards.push(generateFilmData());
+}
+
+console.log(generatedArrayCards);
+
 export const createFilmCard = () => {
   return (`
   <article class="film-card">

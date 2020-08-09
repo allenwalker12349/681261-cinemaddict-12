@@ -12,6 +12,7 @@ const CARDS_AMOUNT = 5;
 const EXTRA_CONTAINER_AMOUNT = 2;
 const CARDS_IN_EXTRA_BLOCK_AMOUNT = 2;
 
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -50,3 +51,9 @@ const siteFooter = document.querySelector(`.footer`);
 render(siteFooter, createStatistic(), `beforeend`);
 
 render(siteMain, createDetailInfo(), `beforeend`);
+
+const closeModalButton = document.querySelector(`.film-details__close-btn`);
+closeModalButton.addEventListener(`click`, function () {
+  document.querySelector(`.film-details`).style.display = `none`;
+});
+

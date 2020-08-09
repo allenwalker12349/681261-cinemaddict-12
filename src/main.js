@@ -8,11 +8,16 @@ import {createExtraFilmBlock} from "./view/extra_film_block.js";
 import {createStatistic} from "./view/statistic.js";
 import {createDetailInfo} from "./view/detail_info.js";
 import {generateCardMock} from "./mock/fillm.js";
+import {createCommentItem} from "./view/comment.js";
+import {randomInteger} from "./util.js";
+import {generateCommentMock} from "./mock/comment.js";
 
 const CARDS_AMOUNT = 5;
+const COMMENT_AMOUNT = randomInteger(1, 5);
 const EXTRA_CONTAINER_AMOUNT = 2;
 const CARDS_IN_EXTRA_BLOCK_AMOUNT = 2;
 const filmCards = new Array(CARDS_AMOUNT).fill().map(generateCardMock);
+const commentsArray = new Array(COMMENT_AMOUNT).fill().map(generateCommentMock);
 
 
 const render = (container, template, place) => {
@@ -52,10 +57,15 @@ extraFilmContainers.forEach((element) => {
 const siteFooter = document.querySelector(`.footer`);
 render(siteFooter, createStatistic(), `beforeend`);
 
-render(siteMain, createDetailInfo(), `beforeend`);
+render(siteMain, createDetailInfo(filmCards[0]), `beforeend`);
+
+const commentsContainer = siteMain.querySelector(`.film-details__comments-list`);
+for (let index = 0; index < commentsArray.length; index++) {
+  render(commentsContainer, createCommentItem(commentsArray[index]), `beforeend`);
+}
+
 
 const closeModalButton = document.querySelector(`.film-details__close-btn`);
 closeModalButton.addEventListener(`click`, function () {
   document.querySelector(`.film-details`).style.display = `none`;
 });
-

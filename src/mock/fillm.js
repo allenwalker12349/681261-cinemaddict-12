@@ -1,14 +1,6 @@
-const MAX_AMMOUNT_OF_COMMENTS = 5;
+import {randomInteger} from "../util.js";
+
 const MAX_AMMOUNT_OF_SENTENSES = 5;
-
-function randomInteger(a, b) {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-}
-
-const formatDate = (date) => date.getFullYear() + `/` + (`0` + date.getDate()).slice(-2) + `/` + (`0` + (date.getMonth() + 1)).slice(-2) + ` ` + (`0` + date.getHours()).slice(-2) + `:` + (`0` + date.getMinutes()).slice(-2);
 
 const generateTitle = () => {
   const titles = [
@@ -55,47 +47,6 @@ const generateDescription = () => {
 
   return result.join(` `);
 };
-
-const generateCommentMock = () => {
-  const text = [
-    `С пивом потянет`,
-    `Книга лучше!`,
-    `Стань разработчиком без регистрации и смс`,
-    `Фильм улёт, кто понял концовку?`
-  ];
-
-  const emoji = [
-    `./images/emoji/angry.png`,
-    `./images/emoji/puke.png`,
-    `./images/emoji/sleeping.png`,
-    `./images/emoji/smile.png`
-  ];
-
-  const authors = [
-    `Петя`,
-    `Маша`,
-    `Даша`,
-    `Глаша`
-  ];
-
-  return {
-    text: text[randomInteger(0, text.length - 1)],
-    emoji: emoji[randomInteger(0, emoji.length - 1)],
-    authors: authors[randomInteger(0, authors.length - 1)],
-    deleteButton: `<button class="film-details__comment-delete">Delete</button>`,
-    date: formatDate(new Date()),
-  };
-};
-
-function generateCommentsForCard() {
-  let result = [];
-
-  for (let i = 0; i < randomInteger(1, MAX_AMMOUNT_OF_COMMENTS); i++) {
-    result.push(generateCommentMock());
-  }
-
-  return result;
-}
 
 export const generateCardMock = () => {
   return {

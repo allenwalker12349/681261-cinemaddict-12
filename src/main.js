@@ -7,10 +7,12 @@ import {createShowMoreButton} from "./view/show_more_button.js";
 import {createExtraFilmBlock} from "./view/extra_film_block.js";
 import {createStatistic} from "./view/statistic.js";
 import {createDetailInfo} from "./view/detail_info.js";
+import {generateCardMock} from "./mock/fillm.js";
 
 const CARDS_AMOUNT = 5;
 const EXTRA_CONTAINER_AMOUNT = 2;
 const CARDS_IN_EXTRA_BLOCK_AMOUNT = 2;
+const filmCards = new Array(CARDS_AMOUNT).fill().map(generateCardMock);
 
 
 const render = (container, template, place) => {
@@ -28,7 +30,7 @@ render(siteMain, createFilmsContainer(), `beforeend`);
 const filmList = siteMain.querySelector(`.films-list`);
 const cardsContainer = filmList.querySelector(`.films-list__container`);
 for (let index = 0; index < CARDS_AMOUNT; index++) {
-  render(cardsContainer, createFilmCard(), `beforeend`);
+  render(cardsContainer, createFilmCard(filmCards[index]), `beforeend`);
 }
 
 render(cardsContainer, createShowMoreButton(), `afterend`);
@@ -43,7 +45,7 @@ const extraFilmContainers = siteMain.querySelectorAll(`.films-list--extra`);
 extraFilmContainers.forEach((element) => {
   const containerToInsertCards = element.querySelector(`.films-list__container`);
   for (let index = 0; index < CARDS_IN_EXTRA_BLOCK_AMOUNT; index++) {
-    render(containerToInsertCards, createFilmCard(), `beforeend`);
+    render(containerToInsertCards, createFilmCard(filmCards[index]), `beforeend`);
   }
 });
 

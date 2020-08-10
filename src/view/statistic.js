@@ -1,7 +1,8 @@
+import {CARDS_AMOUNT} from "../main.js";
 export const createStatistic = () => {
   return (`
   <section class="footer__statistics">
-    <p>130 291 movies inside</p>
+    <p>${CARDS_AMOUNT} movies inside</p>
   </section>
   `);
 };

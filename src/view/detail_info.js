@@ -1,5 +1,12 @@
 export const createDetailInfo = (cardData) => {
-  const {title, poster, description} = cardData;
+  const {title, poster, description, raiting, duration, gener, originTitle, director, actors, writers,
+    country, date, age} = cardData;
+
+  let genreString = `Genere`;
+  if (gener.length > 1) {
+    genreString = `Generes`;
+  }
+
   return (`
   <section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -11,52 +18,49 @@ export const createDetailInfo = (cardData) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="${poster}" alt="">
 
-          <p class="film-details__age">18+</p>
+          <p class="film-details__age">${age}</p>
         </div>
 
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">Original: The Great Flamarion</p>
+              <p class="film-details__title-original">${originTitle}</p>
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">8.9</p>
+              <p class="film-details__total-rating">${raiting}</p>
             </div>
           </div>
 
           <table class="film-details__table">
             <tr class="film-details__row">
               <td class="film-details__term">Director</td>
-              <td class="film-details__cell">Anthony Mann</td>
+              <td class="film-details__cell">${director}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+              <td class="film-details__cell">${writers}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+              <td class="film-details__cell">${actors}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">30 March 1945</td>
+              <td class="film-details__cell">${date}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">1h 18m</td>
+              <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
-              <td class="film-details__cell">USA</td>
+              <td class="film-details__cell">${country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
-              <td class="film-details__cell">
-                <span class="film-details__genre">Drama</span>
-                <span class="film-details__genre">Film-Noir</span>
-                <span class="film-details__genre">Mystery</span></td>
+              <td class="film-details__term">${genreString}</td>
+              <td class="film-details__cell">${gener}</td>
             </tr>
           </table>
 
@@ -80,7 +84,7 @@ export const createDetailInfo = (cardData) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count"></span></h3>
 
         <ul class="film-details__comments-list">
         </ul>

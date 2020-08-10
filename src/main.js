@@ -12,10 +12,12 @@ import {createCommentItem} from "./view/comment.js";
 import {randomInteger} from "./util.js";
 import {generateCommentMock} from "./mock/comment.js";
 
-const CARDS_AMOUNT = 5;
+export const CARDS_AMOUNT = 17;
 const COMMENT_AMOUNT = randomInteger(1, 5);
 const EXTRA_CONTAINER_AMOUNT = 2;
 const CARDS_IN_EXTRA_BLOCK_AMOUNT = 2;
+const CARD_COUNT_PER_STEP = 5;
+let renderedCardsCount = CARD_COUNT_PER_STEP;
 const filmCards = new Array(CARDS_AMOUNT).fill().map(generateCardMock);
 const commentsArray = new Array(COMMENT_AMOUNT).fill().map(generateCommentMock);
 
@@ -34,11 +36,24 @@ render(siteMain, createFilmsContainer(), `beforeend`);
 
 const filmList = siteMain.querySelector(`.films-list`);
 const cardsContainer = filmList.querySelector(`.films-list__container`);
-for (let index = 0; index < CARDS_AMOUNT; index++) {
+for (let index = 0; index < Math.min(filmCards.length, CARD_COUNT_PER_STEP); index++) {
   render(cardsContainer, createFilmCard(filmCards[index]), `beforeend`);
 }
 
-render(cardsContainer, createShowMoreButton(), `afterend`);
+if (CARDS_AMOUNT > 5) {
+  render(cardsContainer, createShowMoreButton(), `afterend`);
+  const showMoreButton = siteMain.querySelector(`.films-list__show-more`);
+  showMoreButton.addEventListener(`click`, function (evt) {
+    evt.preventDefault();
+    filmCards 
+    .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_PER_STEP)
+    .forEach((card) => render(cardsContainer, createFilmCard(card), `beforeend`));
+    renderedCardsCount += CARD_COUNT_PER_STEP;
+    if (renderedCardsCount >= filmCards.length) {
+      showMoreButton.remove();
+    }
+  });
+}
 
 const filmContainer = siteMain.querySelector(`.films`);
 
@@ -63,6 +78,8 @@ const commentsContainer = siteMain.querySelector(`.film-details__comments-list`)
 for (let index = 0; index < commentsArray.length; index++) {
   render(commentsContainer, createCommentItem(commentsArray[index]), `beforeend`);
 }
+
+siteMain.querySelector(`.film-details__comments-count`).innerHTML = commentsArray.length;
 
 
 const closeModalButton = document.querySelector(`.film-details__close-btn`);

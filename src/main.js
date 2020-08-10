@@ -45,7 +45,7 @@ if (CARDS_AMOUNT > 5) {
   const showMoreButton = siteMain.querySelector(`.films-list__show-more`);
   showMoreButton.addEventListener(`click`, function (evt) {
     evt.preventDefault();
-    filmCards 
+    filmCards
     .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_PER_STEP)
     .forEach((card) => render(cardsContainer, createFilmCard(card), `beforeend`));
     renderedCardsCount += CARD_COUNT_PER_STEP;

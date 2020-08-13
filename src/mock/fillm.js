@@ -1,13 +1,21 @@
 import {randomInteger} from "../util.js";
+import {getComments} from "./comment.js";
 
 const MAX_AMMOUNT_OF_SENTENSES = 5;
 const RAITING = {
   MIN: 1,
   MAX: 10,
 };
-const YEAR = {
-  MIN: 1929,
-  MAX: 2020,
+
+const DURATION = {
+  HOURS: {
+    MIN: 1,
+    MAX: 3
+  },
+  MINUTES: {
+    MIN: 1,
+    MAX: 59
+  }
 };
 
 const generateTitle = () => {
@@ -65,24 +73,23 @@ const generateFilmRaiting = (min, max) => {
 
 const generateDuration = () => {
   return {
-    hours: randomInteger(RAITING.MIN, RAITING.MAX),
-    minutes: randomInteger(RAITING.MIN, RAITING.MAX),
+    hours: randomInteger(DURATION.HOURS.MIN, DURATION.HOURS.MAX),
+    minutes: randomInteger(DURATION.MINUTES.MIN, DURATION.MINUTES.MAX),
   };
 };
 
 const generateGenre = () => {
-  const geners = [
-    ` music`,
-    ` horror`,
-    ` action`,
-    ` drama`
+  const genres = [
+    `music`,
+    `horror`,
+    `action`,
+    `drama`
   ];
-  const randomNum = randomInteger(1, geners.length - 1);
-  let result = [];
-  for (let i = 1; i <= randomNum; i++) {
-    result.push(geners[i]);
-  }
-  return result;
+  const randomNum = randomInteger(1, genres.length - 1);
+  return new Array(randomNum).fill().map(function (i) {
+    i = genres[randomInteger(0, genres.length - 1)];
+    return i;
+  });
 };
 
 const generateOriginTitle = () => {
@@ -123,7 +130,7 @@ const generateActors = () => {
   for (let i = 0; i <= randomNum; i++) {
     result.push(actors[i]);
   }
-  return result.join(` `);
+  return result;
 };
 
 const generateWriters = () => {
@@ -141,32 +148,37 @@ const generateWriters = () => {
 };
 
 const generateFilmDate = () => {
-  const months = [
-    `Jun`,
-    `Jul`,
-    `Aug`
-  ];
-  const year = randomInteger(1929, 2020);
-  const month = months[randomInteger(0, months.length - 1)];
-  const day = randomInteger(1, 31);
-  return day + ` ` + month + ` ` + year;
+  const today = new Date(Date.now());
+  return new Date(today.getFullYear() - randomInteger(1, 50),
+      today.getMonth() + Math.random() * randomInteger(1, 12),
+      today.getDate() + Math.random() * randomInteger(1, 31),
+      Math.random(),
+      Math.random() * 60);
 };
 
-export const generateCardMock = () => {
+const generateCardMock = () => {
   return {
     title: generateTitle(),
     poster: generatePoster(),
     description: generateDescription(),
     raiting: generateFilmRaiting(RAITING.MIN, RAITING.MAX),
-    year: randomInteger(YEAR.MIN, YEAR.MAX),
     duration: generateDuration(),
-    gener: generateGenre(),
+    genre: generateGenre(),
     originTitle: generateOriginTitle(),
     director: generateDirector(),
     actors: generateActors(),
     writers: generateWriters(),
     country: generateCountry(),
-    date: generateFilmDate(),
-    age: randomInteger(7, 18) + `+`,
+    releaseDate: generateFilmDate(),
+    ageRating: randomInteger(7, 18),
+    comments: getComments(randomInteger(1, 5)),
   };
+};
+
+export const getFilmCards = (amount) => {
+  let result = [];
+  for (let i = 0; i < amount; i++) {
+    result.push(generateCardMock());
+  }
+  return result;
 };

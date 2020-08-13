@@ -6,3 +6,11 @@ export function randomInteger(a, b) {
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 }
+
+export const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export const getRandomArrayEl = (array) => {
+  return array[randomInteger(0, array.length - 1)];
+};

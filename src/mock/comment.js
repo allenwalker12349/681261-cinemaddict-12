@@ -9,10 +9,22 @@ export const generateCommentMock = () => {
   ];
 
   const emoji = [
-    `./images/emoji/angry.png`,
-    `./images/emoji/puke.png`,
-    `./images/emoji/sleeping.png`,
-    `./images/emoji/smile.png`
+    {
+      path: `./images/emoji/angry.png`,
+      alt: `angry`
+    },
+    {
+      path: `./images/emoji/puke.png`,
+      alt: `puke`
+    },
+    {
+      path: `./images/emoji/sleeping.png`,
+      alt: `sleeping`
+    },
+    {
+      path: `./images/emoji/smile.png`,
+      alt: `smile`
+    }
   ];
 
   const authors = [
@@ -28,4 +40,12 @@ export const generateCommentMock = () => {
     author: authors[randomInteger(0, authors.length - 1)],
     date: formatDate(new Date()),
   };
+};
+
+export const getComments = (amount) => {
+  let result = [];
+  for (let i = 0; i < amount; i++) {
+    result.push(generateCommentMock());
+  }
+  return result;
 };

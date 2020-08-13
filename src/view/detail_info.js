@@ -1,11 +1,25 @@
 export const createDetailInfo = (cardData) => {
-  const {title, poster, description, raiting, duration, gener, originTitle, director, actors, writers,
-    country, date, age} = cardData;
+  const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
+    country, releaseDate, ageRating} = cardData;
 
-  let genreString = `Genere`;
-  if (gener.length > 1) {
-    genreString = `Generes`;
+  let genreString = `Genre`;
+  if (genre.length > 1) {
+    genreString = `Genres`;
   }
+
+  const renderGenres = () => {
+    return genre.join(`, `);
+  };
+
+  const renderDate = (data) => {
+    const month = [`Января`, `Февраля`, `Марта`, `Апреля`, `Мая`, `Июня`, `Июля`, `Августа`, `Сентября`, `Октября`,
+      `Ноября`, `Декабря`];
+    return data.getDate() + ` ` + month[data.getMonth()] + ` ` + data.getFullYear();
+  };
+
+  const renderActors = (data) => {
+    return data.join(` `);
+  };
 
   return (`
   <section class="film-details">
@@ -18,7 +32,7 @@ export const createDetailInfo = (cardData) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="${poster}" alt="">
 
-          <p class="film-details__age">${age}</p>
+          <p class="film-details__age">${ageRating + `+`}</p>
         </div>
 
         <div class="film-details__info">
@@ -44,11 +58,11 @@ export const createDetailInfo = (cardData) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${actors}</td>
+              <td class="film-details__cell">${renderActors(actors)}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${date}</td>
+              <td class="film-details__term">Release date</td>
+              <td class="film-details__cell">${renderDate(releaseDate)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -60,7 +74,9 @@ export const createDetailInfo = (cardData) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">${genreString}</td>
-              <td class="film-details__cell">${gener}</td>
+              <td class="film-details__cell">
+              ${renderGenres()}
+              </td>
             </tr>
           </table>
 

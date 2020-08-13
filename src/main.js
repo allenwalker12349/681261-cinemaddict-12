@@ -7,24 +7,20 @@ import {createShowMoreButton} from "./view/show_more_button.js";
 import {createExtraFilmBlock} from "./view/extra_film_block.js";
 import {createStatistic} from "./view/statistic.js";
 import {createDetailInfo} from "./view/detail_info.js";
-import {generateCardMock} from "./mock/fillm.js";
 import {createCommentItem} from "./view/comment.js";
 import {randomInteger} from "./util.js";
-import {generateCommentMock} from "./mock/comment.js";
+import {getFilmCards} from "./mock/fillm.js";
+import {getComments} from "./mock/comment.js";
+import {render} from "./util.js";
 
-export const CARDS_AMOUNT = 17;
-const COMMENT_AMOUNT = randomInteger(1, 5);
+
 const EXTRA_CONTAINER_AMOUNT = 2;
+const CARDS_AMOUNT = 17;
 const CARDS_IN_EXTRA_BLOCK_AMOUNT = 2;
 const CARD_COUNT_PER_STEP = 5;
 let renderedCardsCount = CARD_COUNT_PER_STEP;
-const filmCards = new Array(CARDS_AMOUNT).fill().map(generateCardMock);
-const commentsArray = new Array(COMMENT_AMOUNT).fill().map(generateCommentMock);
-
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+export const filmCards = getFilmCards(CARDS_AMOUNT);
+const comments = getComments(randomInteger(1, 5));
 
 const siteHeader = document.querySelector(`.header`);
 render(siteHeader, createProfileTemplate(), `beforeend`);
@@ -40,7 +36,7 @@ for (let index = 0; index < Math.min(filmCards.length, CARD_COUNT_PER_STEP); ind
   render(cardsContainer, createFilmCard(filmCards[index]), `beforeend`);
 }
 
-if (CARDS_AMOUNT > 5) {
+if (CARDS_AMOUNT.length > CARD_COUNT_PER_STEP) {
   render(cardsContainer, createShowMoreButton(), `afterend`);
   const showMoreButton = siteMain.querySelector(`.films-list__show-more`);
   showMoreButton.addEventListener(`click`, function (evt) {
@@ -75,11 +71,11 @@ render(siteFooter, createStatistic(), `beforeend`);
 render(siteMain, createDetailInfo(filmCards[0]), `beforeend`);
 
 const commentsContainer = siteMain.querySelector(`.film-details__comments-list`);
-for (let index = 0; index < commentsArray.length; index++) {
-  render(commentsContainer, createCommentItem(commentsArray[index]), `beforeend`);
+for (let index = 0; index < comments.length; index++) {
+  render(commentsContainer, createCommentItem(comments[index]), `beforeend`);
 }
 
-siteMain.querySelector(`.film-details__comments-count`).innerHTML = commentsArray.length;
+siteMain.querySelector(`.film-details__comments-count`).innerHTML = comments.length;
 
 
 const closeModalButton = document.querySelector(`.film-details__close-btn`);

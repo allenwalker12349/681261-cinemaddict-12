@@ -1,8 +1,8 @@
-import {CARDS_AMOUNT} from "../main.js";
+import {filmCards} from "../main.js";
 export const createStatistic = () => {
   return (`
   <section class="footer__statistics">
-    <p>${CARDS_AMOUNT} movies inside</p>
+    <p>${filmCards.length} movies inside</p>
   </section>
   `);
 };

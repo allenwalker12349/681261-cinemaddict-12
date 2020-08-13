@@ -36,7 +36,7 @@ for (let index = 0; index < Math.min(filmCards.length, CARD_COUNT_PER_STEP); ind
   render(cardsContainer, createFilmCard(filmCards[index]), `beforeend`);
 }
 
-if (CARDS_AMOUNT.length > CARD_COUNT_PER_STEP) {
+if (filmCards.length > CARD_COUNT_PER_STEP) {
   render(cardsContainer, createShowMoreButton(), `afterend`);
   const showMoreButton = siteMain.querySelector(`.films-list__show-more`);
   showMoreButton.addEventListener(`click`, function (evt) {

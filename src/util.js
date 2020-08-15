@@ -7,10 +7,6 @@ export function randomInteger(a, b) {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 }
 
-export const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 export const getRandomArrayEl = (array) => {
   return array[randomInteger(0, array.length - 1)];
 };
@@ -20,7 +16,7 @@ export const renderPosition = {
   BEFOREEND: `beforeend`
 };
 
-export const renderElement = (container, element, place) => {
+export const render = (container, element, place) => {
   switch (place) {
     case renderPosition.AFTERBEGIN:
       container.prepend(element);

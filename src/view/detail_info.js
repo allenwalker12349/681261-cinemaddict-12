@@ -1,4 +1,6 @@
-export const createDetailInfo = (cardData) => {
+import {createElement} from "../util.js";
+
+const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
     country, releaseDate, ageRating} = cardData;
 
@@ -140,3 +142,25 @@ export const createDetailInfo = (cardData) => {
   </section>
   `);
 };
+
+export default class DetailInfo {
+  constructor(films) {
+    this._element = null;
+    this._films = films;
+  }
+
+  getTemplate() {
+    return createDetailInfo(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

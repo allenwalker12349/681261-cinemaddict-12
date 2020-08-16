@@ -1,16 +1,16 @@
 import SiteProfileView from "./view/profile.js";
-import NavigationContainer from "./view/navigation_container.js";
-import NavigationList from "./view/navigation_list";
-import StatsButton from "./view/stats_button.js";
+import NavigationContainer from "./view/navigation-container.js";
+import NavigationList from "./view/navigation-list";
+import StatsButton from "./view/stats-button.js";
 import Sort from "./view/sort.js";
-import AllFilmContainer from "./view/all_films_container.js";
-import FilmList from "./view/film_list.js";
-import CardsContainer from "./view/cards_container.js";
-import FilmCard from "./view/film_card.js";
-import ShowMoreButton from "./view/show_more_button.js";
+import AllFilmContainer from "./view/all-films-container.js";
+import FilmList from "./view/film-list.js";
+import CardsContainer from "./view/cards-container.js";
+import FilmCard from "./view/film-card.js";
+import ShowMoreButton from "./view/show-more-button.js";
 import Statistic from "./view/statistic.js";
-import DetailInfo from "./view/detail_info";
-import CommentItem from "./view/comment.js";
+import DetailInfo from "./view/detail-info";
+import Comment from "./view/comment.js";
 import {getFilmCards} from "./mock/fillm.js";
 import {render, renderPosition} from "./util.js";
 
@@ -66,7 +66,7 @@ const renderTask = (cardListElement, card) => {
 
   const CommentList = detailInfo.getElement().querySelector(`.film-details__comments-list`);
   detailInfo.getElement().querySelector(`.film-details__comments-count`).innerHTML = card.comments.length;
-  card.comments.forEach((comment) => render(CommentList, new CommentItem(comment).getElement(), renderPosition.BEFOREEND));
+  card.comments.forEach((comment) => render(CommentList, new Comment(comment).getElement(), renderPosition.BEFOREEND));
 
   render(cardListElement, cardComponent.getElement(), renderPosition.BEFOREEND);
 };

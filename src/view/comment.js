@@ -18,7 +18,7 @@ const createCommentItem = (data) => {
   </li>`;
 };
 
-export default class CommentItem {
+export default class Comment {
   constructor(comments) {
     this._element = null;
     this._comment = comments;

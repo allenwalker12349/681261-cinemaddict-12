@@ -10,16 +10,14 @@ import FilmCard from "./view/film_card.js";
 import ShowMoreButton from "./view/show_more_button.js";
 import Statistic from "./view/statistic.js";
 import DetailInfo from "./view/detail_info";
-import {randomInteger} from "./util.js";
+import CommentItem from "./view/comment.js";
 import {getFilmCards} from "./mock/fillm.js";
-import {getComments} from "./mock/comment.js";
 import {render, renderPosition} from "./util.js";
 
 const CARDS_AMOUNT = 17;
 const CARD_COUNT_PER_STEP = 5;
 let renderedCardsCount = CARD_COUNT_PER_STEP;
 export const filmCards = getFilmCards(CARDS_AMOUNT);
-const comments = getComments(randomInteger(1, 5));
 
 
 // рендер хедера
@@ -65,6 +63,10 @@ const renderTask = (cardListElement, card) => {
   detailInfo.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, function () {
     siteMain.removeChild(detailInfo.getElement());
   });
+
+  const CommentList = detailInfo.getElement().querySelector(`.film-details__comments-list`);
+  detailInfo.getElement().querySelector(`.film-details__comments-count`).innerHTML = card.comments.length;
+  card.comments.forEach((comment) => render(CommentList, new CommentItem(comment).getElement(), renderPosition.BEFOREEND));
 
   render(cardListElement, cardComponent.getElement(), renderPosition.BEFOREEND);
 };

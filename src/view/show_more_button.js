@@ -26,6 +26,3 @@ export default class ShowMoreButton {
     this._element = null;
   }
 }
-
-
-

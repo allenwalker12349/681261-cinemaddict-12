@@ -1,5 +1,7 @@
 
-export const createCommentItem = (data) => {
+import {createElement} from "../util.js";
+
+const createCommentItem = (data) => {
   const {text, emoji, author, date} = data;
   return `
   <li class="film-details__comment">
@@ -17,3 +19,25 @@ export const createCommentItem = (data) => {
   </li>
   `;
 };
+
+export default class CommentItem {
+  constructor(comments) {
+    this._element = null;
+    this._comment = comments;
+  }
+
+  getTemplate() {
+    return createCommentItem(this._comment);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

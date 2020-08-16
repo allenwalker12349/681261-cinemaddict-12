@@ -3,8 +3,7 @@ import {createElement} from "../util.js";
 
 const createCommentItem = (data) => {
   const {text, emoji, author, date} = data;
-  return `
-  <li class="film-details__comment">
+  return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
       <img src="${emoji.path}" alt="${emoji.alt}" width="55" height="55" alt="emoji-smile">
     </span>
@@ -16,8 +15,7 @@ const createCommentItem = (data) => {
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>
-  </li>
-  `;
+  </li>`;
 };
 
 export default class CommentItem {

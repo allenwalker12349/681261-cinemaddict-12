@@ -1,9 +1,7 @@
 import {createElement} from "../util.js";
 
 const createCardsContainer = () => {
-  return (`
-  <div class="films-list__container"></div>
-  `);
+  return (`<div class="films-list__container"></div>`);
 };
 
 export default class CardsContainer {

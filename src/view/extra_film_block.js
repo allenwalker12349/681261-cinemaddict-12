@@ -1,11 +1,9 @@
 import {createElement} from "../util.js";
 
 const createExtraFilmBlock = () => {
-  return (`
-  <section class="films-list--extra">
+  return (`<section class="films-list--extra">
     <h2 class="films-list__title">Top rated</h2>
-  </section>
-  `);
+  </section>`);
 };
 
 export default class ExtraFilmBlock {

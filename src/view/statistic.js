@@ -2,11 +2,9 @@ import {filmCards} from "../main.js";
 import {createElement} from "../util.js";
 
 export const createStatistic = () => {
-  return (`
-  <section class="footer__statistics">
+  return (`<section class="footer__statistics">
     <p>${filmCards.length} movies inside</p>
-  </section>
-  `);
+  </section>`);
 };
 
 export default class Statistic {

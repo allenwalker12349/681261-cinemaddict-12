@@ -1,11 +1,7 @@
 import {createElement} from "../util.js";
 
 const createFilmsContainer = () => {
-  return (`
-  <section class="films">
-    
-  </section>
-  `);
+  return (`<section class="films"></section>`);
 };
 
 export default class AllFilmContainer {

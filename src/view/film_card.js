@@ -12,8 +12,7 @@ const renderCardDescription = (data) => {
 
 const createFilmCard = (cardData) => {
   const {title, poster, description, raiting, releaseDate, duration, genre, comments} = cardData;
-  return (`
-  <article class="film-card">
+  return (`<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${raiting}</p>
   <p class="film-card__info">
@@ -29,8 +28,7 @@ const createFilmCard = (cardData) => {
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
     <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
   </form>
-  </article>
-  `);
+  </article>`);
 };
 
 export default class FilmCard {

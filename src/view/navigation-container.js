@@ -1,11 +1,7 @@
 import {createElement} from "../util.js";
 
-const createSort = () => {
-  return (`<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`);
+const createNavigationContainer = () => {
+  return (`<nav class="main-navigation"></nav>`);
 };
 
 export default class NavigationContainer {
@@ -14,7 +10,7 @@ export default class NavigationContainer {
   }
 
   getTemplate() {
-    return createSort();
+    return createNavigationContainer();
   }
 
   getElement() {
@@ -28,4 +24,3 @@ export default class NavigationContainer {
     this._element = null;
   }
 }
-

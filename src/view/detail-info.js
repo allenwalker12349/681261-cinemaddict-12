@@ -1,4 +1,6 @@
-export const createDetailInfo = (cardData) => {
+import {createElement} from "../util.js";
+
+const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
     country, releaseDate, ageRating} = cardData;
 
@@ -21,8 +23,7 @@ export const createDetailInfo = (cardData) => {
     return data.join(` `);
   };
 
-  return (`
-  <section class="film-details">
+  return (`<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="form-details__top-container">
       <div class="film-details__close">
@@ -137,6 +138,27 @@ export const createDetailInfo = (cardData) => {
       </section>
     </div>
   </form>
-  </section>
-  `);
+  </section>`);
 };
+
+export default class DetailInfo {
+  constructor(films) {
+    this._element = null;
+    this._films = films;
+  }
+
+  getTemplate() {
+    return createDetailInfo(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

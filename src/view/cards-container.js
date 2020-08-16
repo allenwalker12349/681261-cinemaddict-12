@@ -1,19 +1,16 @@
-import {filmCards} from "../main.js";
 import {createElement} from "../util.js";
 
-export const createStatistic = () => {
-  return (`<section class="footer__statistics">
-    <p>${filmCards.length} movies inside</p>
-  </section>`);
+const createCardsContainer = () => {
+  return (`<div class="films-list__container"></div>`);
 };
 
-export default class Statistic {
+export default class CardsContainer {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createStatistic();
+    return createCardsContainer();
   }
 
   getElement() {
@@ -27,4 +24,5 @@ export default class Statistic {
     this._element = null;
   }
 }
+
 

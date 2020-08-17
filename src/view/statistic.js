@@ -1,5 +1,5 @@
 import {filmCards} from "../main.js";
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 
 export const createStatistic = () => {
   return (`<section class="footer__statistics">
@@ -7,24 +7,9 @@ export const createStatistic = () => {
   </section>`);
 };
 
-export default class Statistic {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Statistic extends AbstractView {
   getTemplate() {
     return createStatistic();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

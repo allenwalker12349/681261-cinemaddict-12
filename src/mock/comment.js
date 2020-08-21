@@ -1,4 +1,4 @@
-import {randomInteger, formatDate} from "../util.js";
+import {randomInteger, formatDate} from "../utils/common.js";
 
 export const generateCommentMock = () => {
   const text = [

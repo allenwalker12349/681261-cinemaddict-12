@@ -7,6 +7,7 @@ import {render, renderPosition} from "../utils/render.js";
 import ShowMoreButton from "../view/show-more-button.js";
 
 const CARD_COUNT_PER_STEP = 5;
+const bodyElement = document.querySelector(`body`);
 
 export default class FilmsContainer {
   constructor(filmsContainer) {
@@ -20,8 +21,6 @@ export default class FilmsContainer {
 
   init(films) {
     this._filmsCard = films.slice();
-    // Метод для инициализации (начала работы) модуля,
-    // малая часть текущей функции renderBoard в main.js
     this._renderFilmsContainer();
     this._renderFilmCards(this._filmsCard);
     this._showoreButton(this._filmsCard);
@@ -34,6 +33,7 @@ export default class FilmsContainer {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();
         this._filmsConainer.removeChild(detailInfo.getElement());
+        bodyElement.classList.remove(`hide-overflow`);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -41,25 +41,29 @@ export default class FilmsContainer {
     render(this._cardsContainer, cardComponent, renderPosition.BEFOREEND);
     cardComponent.setImgClickHandler(() => {
       this._filmsConainer.appendChild(detailInfo.getElement());
+      detailInfo.renderComments();
+      bodyElement.classList.add(`hide-overflow`);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     cardComponent.setTitleClickHandler(() => {
+      detailInfo.renderComments();
       this._filmsConainer.appendChild(detailInfo.getElement());
+      bodyElement.classList.add(`hide-overflow`);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     cardComponent.setCommentClickHandler(() => {
+      detailInfo.renderComments();
       this._filmsConainer.appendChild(detailInfo.getElement());
+      bodyElement.classList.add(`hide-overflow`);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     detailInfo.setCloseBtnClickHandler(() => {
       this._filmsConainer.removeChild(detailInfo.getElement());
+      bodyElement.classList.remove(`hide-overflow`);
     });
-
-    detailInfo._setCommentsAmount();
-    detailInfo._renderComments();
   }
 
   _renderFilmCards(films) {

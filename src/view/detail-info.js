@@ -4,7 +4,7 @@ import {render, renderPosition} from "../utils/render.js";
 
 const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
-    country, releaseDate, ageRating} = cardData;
+    country, releaseDate, ageRating, comments} = cardData;
 
   let genreString = `Genre`;
   if (genre.length > 1) {
@@ -103,7 +103,7 @@ const createDetailInfo = (cardData) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count"></span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
         </ul>
@@ -164,11 +164,7 @@ export default class DetailInfo extends AbstractView {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
 
-  _setCommentsAmount() {
-    this.getElement().querySelector(`.film-details__comments-count`).innerHTML = this._filmData.comments.length;
-  }
-
-  _renderComments() {
+  renderComments() {
     const commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
     this._filmData.comments.forEach((comment) => {
       render(commentsContainer, new Comment(comment), renderPosition.BEFOREEND);

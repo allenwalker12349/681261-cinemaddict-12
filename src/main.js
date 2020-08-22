@@ -6,7 +6,7 @@ import Sort from "./view/sort.js";
 import Statistic from "./view/statistic.js";
 import {getFilmCards} from "./mock/fillm.js";
 import {render, renderPosition} from "./utils/render.js";
-import FilmsContainer from "./presenter/move-list.js";
+import FilmsContainer from "./presenter/films-container.js";
 
 const CARDS_AMOUNT = 17;
 export const filmCards = getFilmCards(CARDS_AMOUNT);

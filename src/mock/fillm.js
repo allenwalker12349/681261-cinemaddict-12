@@ -1,4 +1,4 @@
-import {randomInteger} from "../util.js";
+import {randomInteger} from "../utils/common.js";
 import {getComments} from "./comment.js";
 
 const MAX_AMMOUNT_OF_SENTENSES = 5;

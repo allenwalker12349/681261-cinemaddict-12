@@ -1,8 +1,10 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
+import Comment from "../view/comment.js";
+import {render, renderPosition} from "../utils/render.js";
 
 const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
-    country, releaseDate, ageRating} = cardData;
+    country, releaseDate, ageRating, comments} = cardData;
 
   let genreString = `Genre`;
   if (genre.length > 1) {
@@ -101,7 +103,7 @@ const createDetailInfo = (cardData) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count"></span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
         </ul>
@@ -141,24 +143,31 @@ const createDetailInfo = (cardData) => {
   </section>`);
 };
 
-export default class DetailInfo {
-  constructor(films) {
-    this._element = null;
-    this._films = films;
+export default class DetailInfo extends AbstractView {
+  constructor(filmData) {
+    super();
+    this._filmData = filmData;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
-    return createDetailInfo(this._films);
+    return createDetailInfo(this._filmData);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeDetailInfo();
   }
 
-  removeElement() {
-    this._element = null;
+  setCloseBtnClickHandler(callback) {
+    this._callback.closeDetailInfo = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  renderComments() {
+    const commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
+    this._filmData.comments.forEach((comment) => {
+      render(commentsContainer, new Comment(comment), renderPosition.BEFOREEND);
+    });
   }
 }

@@ -1,4 +1,6 @@
 import AbstractView from "./abstract.js";
+import Comment from "../view/comment.js";
+import {render, renderPosition} from "../utils/render.js";
 
 const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
@@ -142,14 +144,14 @@ const createDetailInfo = (cardData) => {
 };
 
 export default class DetailInfo extends AbstractView {
-  constructor(films) {
+  constructor(filmData) {
     super();
-    this._films = films;
+    this._filmData = filmData;
     this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
-    return createDetailInfo(this._films);
+    return createDetailInfo(this._filmData);
   }
 
   _clickHandler(evt) {
@@ -160,5 +162,16 @@ export default class DetailInfo extends AbstractView {
   setCloseBtnClickHandler(callback) {
     this._callback.closeDetailInfo = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  _setCommentsAmount() {
+    this.getElement().querySelector(`.film-details__comments-count`).innerHTML = this._filmData.comments.length;
+  }
+
+  _renderComments() {
+    const commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
+    this._filmData.comments.forEach((comment) => {
+      render(commentsContainer, new Comment(comment), renderPosition.BEFOREEND);
+    });
   }
 }

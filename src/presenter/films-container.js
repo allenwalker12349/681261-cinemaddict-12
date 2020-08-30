@@ -1,13 +1,11 @@
 import AllFilmContainer from "../view/all-films-container.js";
 import FilmList from "../view/film-list.js";
 import CardsContainer from "../view/cards-container.js";
-import FilmCard from "../view/film-card.js";
-import DetailInfo from "../view/detail-info";
 import {render, renderPosition} from "../utils/render.js";
 import ShowMoreButton from "../view/show-more-button.js";
+import FilmCardPresenter from "./film-card-presenter.js";
 
 const CARD_COUNT_PER_STEP = 5;
-const bodyElement = document.querySelector(`body`);
 
 export default class FilmsContainer {
   constructor(filmsContainer) {
@@ -26,44 +24,9 @@ export default class FilmsContainer {
     this._showoreButton(this._filmsCard);
   }
 
-  _renderCard(card) {
-    const cardComponent = new FilmCard(card);
-    const detailInfo = new DetailInfo(card);
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        this._filmsConainer.removeChild(detailInfo.getElement());
-        bodyElement.classList.remove(`hide-overflow`);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    render(this._cardsContainer, cardComponent, renderPosition.BEFOREEND);
-    cardComponent.setImgClickHandler(() => {
-      this._filmsConainer.appendChild(detailInfo.getElement());
-      detailInfo.renderComments();
-      bodyElement.classList.add(`hide-overflow`);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    cardComponent.setTitleClickHandler(() => {
-      detailInfo.renderComments();
-      this._filmsConainer.appendChild(detailInfo.getElement());
-      bodyElement.classList.add(`hide-overflow`);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    cardComponent.setCommentClickHandler(() => {
-      detailInfo.renderComments();
-      this._filmsConainer.appendChild(detailInfo.getElement());
-      bodyElement.classList.add(`hide-overflow`);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    detailInfo.setCloseBtnClickHandler(() => {
-      this._filmsConainer.removeChild(detailInfo.getElement());
-      bodyElement.classList.remove(`hide-overflow`);
-    });
+  _renderCard(films) {
+    const cardPresenter = new FilmCardPresenter(this._cardsContainer);
+    cardPresenter.init(films);
   }
 
   _renderFilmCards(films) {

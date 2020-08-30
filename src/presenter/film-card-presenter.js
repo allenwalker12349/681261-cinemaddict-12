@@ -11,7 +11,7 @@ export default class FilmCardPresenter {
     this._handleTitleClick = this._handleTitleClick.bind(this);
     this._handleCommentClick = this._handleCommentClick.bind(this);
     this._handleEscButtonClick = this._handleEscButtonClick.bind(this);
-    this._closePopUp = this._closePopUp.bind(this);
+    this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
   }
 
   init(cardInfo) {
@@ -22,7 +22,7 @@ export default class FilmCardPresenter {
     this._FilmCard.setImgClickHandler(this._handleImgClick);
     this._FilmCard.setTitleClickHandler(this._handleTitleClick);
     this._FilmCard.setCommentClickHandler(this._handleCommentClick);
-    this._detialInfo.setCloseBtnClickHandler(this._closePopUp);
+    this._detialInfo.setCloseBtnClickHandler(this._handleCloseButtonClick);
   }
 
   _handleTitleClick() {
@@ -42,6 +42,11 @@ export default class FilmCardPresenter {
       this._closePopUp();
       document.removeEventListener(`keydown`, this._handleEscButtonClick);
     }
+  }
+
+  _handleCloseButtonClick() {
+    this._closePopUp();
+    document.removeEventListener(`keydown`, this._handleEscButtonClick);
   }
 
   _showPopUp() {

@@ -172,6 +172,9 @@ const generateCardMock = () => {
     releaseDate: generateFilmDate(),
     ageRating: randomInteger(7, 18),
     comments: getComments(randomInteger(1, 5)),
+    isInWatchList: false,
+    isFavorite: false,
+    isWatched: false,
   };
 };
 

@@ -5,15 +5,16 @@ import {render, renderPosition} from "../utils/render.js";
 const bodyElement = document.querySelector(`body`);
 
 export default class FilmCardPresenter {
-  constructor(cardConttainer, changeData) {
+  constructor(cardConttainer) {
     this._cardListContainer = cardConttainer;
     this._handleImgClick = this._handleImgClick.bind(this);
     this._handleTitleClick = this._handleTitleClick.bind(this);
     this._handleCommentClick = this._handleCommentClick.bind(this);
     this._handleEscButtonClick = this._handleEscButtonClick.bind(this);
     this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
-    this._handleAddToWatch = this._handleAddToWatch.bind(this);
-    this._changeData = changeData;
+    this._handleAddToFavorite = this._handleAddToFavorite.bind(this);
+    this._handleAddToWatched = this._handleAddToWatched.bind(this);
+    this._handleAddToWatchList = this._handleAddToWatchList.bind(this);
   }
 
   init(cardInfo) {
@@ -24,15 +25,25 @@ export default class FilmCardPresenter {
     this._filmCard.setImgClickHandler(this._handleImgClick);
     this._filmCard.setTitleClickHandler(this._handleTitleClick);
     this._filmCard.setCommentClickHandler(this._handleCommentClick);
-    this._filmCard.setAddtoWatchClickHandler(this._handleAddToWatch);
-    this._filmCard.setWatchedClickHandler(this._handleAddToWatch);
-    this._filmCard.setAddtoFavorite(this._handleAddToWatch);
+    this._filmCard.setWatchedClickHandler(this._handleAddToWatched);
+    this._filmCard.setAddToFavoriteClickHandler(this._handleAddToFavorite);
+    this._filmCard.setWatchLaterListHandler(this._handleAddToWatchList);
     this._detialInfo.setCloseBtnClickHandler(this._handleCloseButtonClick);
   }
 
-  _handleAddToWatch(evt) {
+  _handleAddToWatched(evt) {
     evt.preventDefault();
-    this._changeData(Object.assign({}, this._filmCard, {isInWatchList: !this._filmCard.isInWatchList}));
+    this._filmCard.addToWatchedListToggler();
+  }
+
+  _handleAddToFavorite(evt) {
+    evt.preventDefault();
+    this._filmCard.addToFavoriteToggler();
+  }
+
+  _handleAddToWatchList(evt) {
+    evt.preventDefault();
+    this._filmCard.watchListToggler();
   }
 
   _handleTitleClick() {

@@ -24,9 +24,9 @@ export default class FilmsContainer {
     this._showoreButton(this._filmsCard);
   }
 
-  _renderCard(films) {
+  _renderCard(film) {
     const cardPresenter = new FilmCardPresenter(this._cardsContainer);
-    cardPresenter.init(films);
+    cardPresenter.init(film);
   }
 
   _renderFilmCards(films) {

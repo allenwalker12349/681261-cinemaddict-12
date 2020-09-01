@@ -1,10 +1,11 @@
-import AbstractView from "./abstract.js";
 import Comment from "../view/comment.js";
 import {render, renderPosition} from "../utils/render.js";
+import Abstract from "./abstract.js";
 
+const ACTIVE_ATRIBUTE = `checked`;
 const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
-    country, releaseDate, ageRating, comments} = cardData;
+    country, releaseDate, ageRating, comments, isInWatchList, isFavorite, isWatched} = cardData;
 
   let genreString = `Genre`;
   if (genre.length > 1) {
@@ -90,7 +91,7 @@ const createDetailInfo = (cardData) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isInWatchList ? ACTIVE_ATRIBUTE : ``}>
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
         <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
@@ -143,11 +144,15 @@ const createDetailInfo = (cardData) => {
   </section>`);
 };
 
-export default class DetailInfo extends AbstractView {
+export default class DetailInfo extends Abstract {
   constructor(filmData) {
     super();
     this._filmData = filmData;
     this._clickHandler = this._clickHandler.bind(this);
+  }
+
+  resotreHandlers() {
+
   }
 
   getTemplate() {
@@ -169,5 +174,34 @@ export default class DetailInfo extends AbstractView {
     this._filmData.comments.forEach((comment) => {
       render(commentsContainer, new Comment(comment), renderPosition.BEFOREEND);
     });
+  }
+
+  setEmojiClickHandler() {
+    const currentEmoji = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    this.getElement().querySelectorAll(`.film-details__emoji-item`).forEach((el) => {
+      el.addEventListener(`click`, (evt) => {
+        currentEmoji.innerHTML = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`;
+        this._selectedEmotion = evt.target.value; 
+      })
+    });
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
+      
+      if (evt.key === `Enter`) {
+        //проверка на пустую эмоцию
+        
+        const commentText =  evt.target.value;
+        const comment = {
+          text: commentText,
+          emoji: {
+            path: `./images/emoji/${this._selectedEmotion}.png`,
+            alt: this._selectedEmotion,
+          },
+          author: 'Вася',
+          date: new Date(),
+        };
+        this._filmData.comments.push(comment);
+        const oldElement = this.getElement();
+      }
+    })
   }
 }

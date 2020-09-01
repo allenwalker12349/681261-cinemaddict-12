@@ -1,6 +1,6 @@
 import FilmCard from "../view/film-card.js";
 import DetailInfo from "../view/detail-info";
-import {render, renderPosition} from "../utils/render.js";
+import {render, renderPosition, remove} from "../utils/render.js";
 
 const bodyElement = document.querySelector(`body`);
 
@@ -73,6 +73,7 @@ export default class FilmCardPresenter {
   _showPopUp() {
     this._cardListContainer.getElement().appendChild(this._detialInfo.getElement());
     this._detialInfo.renderComments();
+    this._detialInfo.setEmojiClickHandler();
     bodyElement.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._handleEscButtonClick);
   }
@@ -80,5 +81,9 @@ export default class FilmCardPresenter {
   _closePopUp() {
     this._cardListContainer.getElement().removeChild(this._detialInfo.getElement());
     bodyElement.classList.remove(`hide-overflow`);
+  }
+
+  destroy() {
+    remove(this._detialInfo)
   }
 }

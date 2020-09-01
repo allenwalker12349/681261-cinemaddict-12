@@ -156,8 +156,9 @@ const generateFilmDate = () => {
       Math.random() * 60);
 };
 
-const generateCardMock = () => {
+const generateCardMock = (id) => {
   return {
+    id: id,
     title: generateTitle(),
     poster: generatePoster(),
     description: generateDescription(),
@@ -181,7 +182,7 @@ const generateCardMock = () => {
 export const getFilmCards = (amount) => {
   let result = [];
   for (let i = 0; i < amount; i++) {
-    result.push(generateCardMock());
+    result.push(generateCardMock(i));
   }
   return result;
 };

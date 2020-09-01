@@ -1,5 +1,6 @@
 
 import AbstractView from "./abstract.js";
+import {formatDate} from "../utils/common.js";
 
 const createCommentItem = (data) => {
   const {text, emoji, author, date} = data;
@@ -11,7 +12,7 @@ const createCommentItem = (data) => {
       <p class="film-details__comment-text">${text}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
-        <span class="film-details__comment-day">${date}</span>
+        <span class="film-details__comment-day">${formatDate(date)}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>

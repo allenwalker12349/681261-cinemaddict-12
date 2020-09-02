@@ -5,7 +5,8 @@ import {render, renderPosition, remove} from "../utils/render.js";
 const bodyElement = document.querySelector(`body`);
 
 export default class FilmCardPresenter {
-  constructor(cardConttainer) {
+  constructor(cardConttainer, changeData) {
+    this._filmCard = null;
     this._cardListContainer = cardConttainer;
     this._handleImgClick = this._handleImgClick.bind(this);
     this._handleTitleClick = this._handleTitleClick.bind(this);
@@ -15,11 +16,15 @@ export default class FilmCardPresenter {
     this._handleAddToFavorite = this._handleAddToFavorite.bind(this);
     this._handleAddToWatched = this._handleAddToWatched.bind(this);
     this._handleAddToWatchList = this._handleAddToWatchList.bind(this);
+    this._changeData = changeData;
   }
 
   init(cardInfo) {
+    this._film = cardInfo;
+    const prevFilmComponent = this._filmCard;
     this._filmCard = new FilmCard(cardInfo);
     this._detialInfo = new DetailInfo(cardInfo);
+
 
     render(this._cardListContainer, this._filmCard, renderPosition.BEFOREEND);
     this._filmCard.setImgClickHandler(this._handleImgClick);
@@ -29,11 +34,19 @@ export default class FilmCardPresenter {
     this._filmCard.setAddToFavoriteClickHandler(this._handleAddToFavorite);
     this._filmCard.setWatchLaterListHandler(this._handleAddToWatchList);
     this._detialInfo.setCloseBtnClickHandler(this._handleCloseButtonClick);
+
+    if (prevFilmComponent !== null) {
+      this._filmCard.rerender();
+    }
   }
 
-  _handleAddToWatched(evt) {
-    evt.preventDefault();
-    this._filmCard.addToWatchedListToggler();
+  _handleAddToWatched() {
+    this._changeData(Object.assign({},
+        this._film,
+        {
+          isWatched: !this._film.isWatched
+        }
+    ));
   }
 
   _handleAddToFavorite(evt) {
@@ -84,6 +97,6 @@ export default class FilmCardPresenter {
   }
 
   destroy() {
-    remove(this._detialInfo)
+    remove(this._detialInfo);
   }
 }

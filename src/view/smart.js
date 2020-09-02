@@ -26,6 +26,5 @@ export default class Smart extends Abstract {
 
     parent.replaceChild(newElement, oldElement);
 
-    this.resotreHandlers();
   }
 }

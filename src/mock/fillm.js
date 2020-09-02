@@ -158,7 +158,7 @@ const generateFilmDate = () => {
 
 const generateCardMock = (id) => {
   return {
-    id: id,
+    id,
     title: generateTitle(),
     poster: generatePoster(),
     description: generateDescription(),

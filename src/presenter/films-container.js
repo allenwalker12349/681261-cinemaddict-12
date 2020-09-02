@@ -4,17 +4,20 @@ import CardsContainer from "../view/cards-container.js";
 import {render, renderPosition} from "../utils/render.js";
 import ShowMoreButton from "../view/show-more-button.js";
 import FilmCardPresenter from "./film-card-presenter.js";
+import {updateItem} from "../utils/common.js";
 
 const CARD_COUNT_PER_STEP = 5;
 
 export default class FilmsContainer {
   constructor(filmsContainer) {
     this._filmsConainer = filmsContainer;
+    this._filmPresenter = {};
 
     this._allCardsContainer = new AllFilmContainer();
     this._filmsUpcomung = new FilmList();
     this._cardsContainer = new CardsContainer();
     this._showMoreButton = new ShowMoreButton();
+    this._handleFilmChange = this._handleFilmChange.bind(this);
   }
 
   init(films) {
@@ -25,8 +28,10 @@ export default class FilmsContainer {
   }
 
   _renderCard(film) {
-    const cardPresenter = new FilmCardPresenter(this._cardsContainer);
+    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleFilmChange);
     cardPresenter.init(film);
+
+    this._filmPresenter[film.id] = cardPresenter;
   }
 
   _renderFilmCards(films) {
@@ -55,5 +60,10 @@ export default class FilmsContainer {
     render(this._filmsConainer, this._allCardsContainer, renderPosition.BEFOREEND);
     render(this._allCardsContainer, this._filmsUpcomung, renderPosition.BEFOREEND);
     render(this._filmsUpcomung, this._cardsContainer, renderPosition.BEFOREEND);
+  }
+
+  _handleFilmChange(updated) {
+    this._films = updateItem(this._filmsCard, updated);
+    this._filmPresenter[updated.id].init(updated);
   }
 }

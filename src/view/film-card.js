@@ -13,7 +13,7 @@ const renderCardDescription = (data) => {
 };
 
 const createFilmCard = (cardData) => {
-  const {title, poster, description, raiting, releaseDate, duration, genre, comments, isInWatchList} = cardData;
+  const {title, poster, description, raiting, releaseDate, duration, genre, comments, isWatched} = cardData;
   return (`<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${raiting}</p>
@@ -27,7 +27,7 @@ const createFilmCard = (cardData) => {
   <a class="film-card__comments">${comments.length} comments</a>
   <form class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
+    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? ACTIVE_ELEMENT_CLASS : ``}">Mark as watched</button>
     <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
   </form>
   </article>`);
@@ -38,6 +38,7 @@ export default class FilmCard extends Smart {
     super();
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
+    this._addToWatchedListToggler = this._addToWatchedListToggler.bind(this);
   }
 
   getTemplate() {
@@ -47,6 +48,11 @@ export default class FilmCard extends Smart {
   _clickHandler(evt) {
     evt.preventDefault();
     this._callback.showDetailInfo();
+  }
+
+  _addToWatchedListToggler(evt) {
+    evt.preventDefault();
+    this._callback.watched();
   }
 
   setImgClickHandler(callback) {
@@ -67,16 +73,7 @@ export default class FilmCard extends Smart {
   setWatchedClickHandler(callback) {
     this._callback.watched = callback;
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-    .addEventListener(`click`, this._callback.watched);
-  }
-
-  addToWatchedListToggler() {
-    this._film.isInWatchList = !this._film.isInWatchList;
-    if (this._film.isInWatchList) {
-      this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).classList.add(ACTIVE_ELEMENT_CLASS);
-    } else {
-      this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).classList.remove(ACTIVE_ELEMENT_CLASS);
-    }
+    .addEventListener(`click`, this._addToWatchedListToggler);
   }
 
   setAddToFavoriteClickHandler(callback) {

@@ -50,11 +50,6 @@ export default class FilmCard extends Smart {
     this._callback.showDetailInfo();
   }
 
-  _addToWatchedListToggler(evt) {
-    evt.preventDefault();
-    this._callback.watched();
-  }
-
   setImgClickHandler(callback) {
     this._callback.showDetailInfo = callback;
     this.getElement().querySelector(`img`).addEventListener(`click`, this._clickHandler);
@@ -74,6 +69,11 @@ export default class FilmCard extends Smart {
     this._callback.watched = callback;
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
     .addEventListener(`click`, this._addToWatchedListToggler);
+  }
+
+  _addToWatchedListToggler(evt) {
+    evt.preventDefault();
+    this._callback.watched();
   }
 
   setAddToFavoriteClickHandler(callback) {

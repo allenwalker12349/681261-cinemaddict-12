@@ -25,26 +25,25 @@ export default class FilmCardPresenter {
     const prevFilmComponent = this._filmCard;
     this._filmCard = new FilmCard(cardInfo);
     this._detialInfo = new DetailInfo(cardInfo);
+    this._filmCard.setImgClickHandler(this._handleImgClick);
+    this._filmCard.setTitleClickHandler(this._handleTitleClick);
+    this._filmCard.setCommentClickHandler(this._handleCommentClick);
+    this._filmCard.setWatchedClickHandler(this._handleAddToWatched);
+    this._filmCard.setAddToFavoriteClickHandler(this._handleAddToFavorite);
+    this._filmCard.setWatchLaterListHandler(this._handleAddToWatchList);
+    this._detialInfo.setCloseBtnClickHandler(this._handleCloseButtonClick);
 
     if (prevFilmComponent === null || prevFilmComponent === null) {
       render(this._cardListContainer, this._filmCard, renderPosition.BEFOREEND);
-      this._filmCard.setImgClickHandler(this._handleImgClick);
-      this._filmCard.setTitleClickHandler(this._handleTitleClick);
-      this._filmCard.setCommentClickHandler(this._handleCommentClick);
-      this._filmCard.setWatchedClickHandler(this._handleAddToWatched);
-      this._filmCard.setAddToFavoriteClickHandler(this._handleAddToFavorite);
-      this._filmCard.setWatchLaterListHandler(this._handleAddToWatchList);
-      this._detialInfo.setCloseBtnClickHandler(this._handleCloseButtonClick);
       return;
     }
 
     if (this._container.getElement().contains(prevFilmComponent.getElement())) {
       replace(this._filmCard, prevFilmComponent);
-      this._filmCard.restoreHandlers();
     }
 
     if (bodyElement.contains(prevFilmComponent.getElement())) {
-      replace(this._filmPopupComponent, prevFilmComponent);
+      replace(this._detialInfo, prevFilmComponent);
       appendChild(prevFilmComponent, this._newCommentComponent);
     }
   }

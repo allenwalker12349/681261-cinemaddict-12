@@ -105,5 +105,15 @@ export default class FilmCard extends Smart {
       this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).classList.remove(ACTIVE_ELEMENT_CLASS);
     }
   }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, this._addToWatchedListToggler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+  }
 }
 

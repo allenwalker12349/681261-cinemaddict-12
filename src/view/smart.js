@@ -8,23 +8,33 @@ export default class Smart extends Abstract {
     super();
   }
 
-  resotreHandlers() {
-    throw new Error(`Abstract method not implemented: resotreHandlers`);
-  }
-
-  updateData() {
-    // обновляет данные и если нужно вызывает updateElement
-  }
-
-  rerender() {
-    const oldElement = this.getElement();
-    const parent = oldElement.parentElement;
+  updateElement() {
+    let prevElement = this.getElement();
+    const parent = prevElement.parentElement;
 
     this.removeElement();
-
     const newElement = this.getElement();
+    parent.replaceChild(newElement, prevElement);
 
-    parent.replaceChild(newElement, oldElement);
+    prevElement = null;
 
+    this.restoreHandlers();
+  }
+
+  updateData(updatedProperty, onlyDataUpdating) {
+    if (!updatedProperty) {
+      return;
+    }
+
+    this._data = Object.assign({},
+        this._data,
+        updatedProperty
+    );
+
+    if (onlyDataUpdating) {
+      return;
+    }
+
+    this.updateElement();
   }
 }

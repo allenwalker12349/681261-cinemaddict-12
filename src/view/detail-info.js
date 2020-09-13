@@ -2,9 +2,11 @@ import AbstractView from "./abstract.js";
 import Comment from "../view/comment.js";
 import {render, renderPosition} from "../utils/render.js";
 
+const ACTIVE_ATRIBUTE = `checked`;
+
 const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
-    country, releaseDate, ageRating, comments} = cardData;
+    country, releaseDate, ageRating, comments, isWatched, isInWatchList, isInFavorite} = cardData;
 
   let genreString = `Genre`;
   if (genre.length > 1) {
@@ -90,13 +92,13 @@ const createDetailInfo = (cardData) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+        <input type="checkbox" ${isInWatchList ? ACTIVE_ATRIBUTE : ``} class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <label for="watchlist"  class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+        <input type="checkbox" ${isWatched ? ACTIVE_ATRIBUTE : ``} class="film-details__control-input visually-hidden" id="watched" name="watched">
         <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+        <input type="checkbox" ${isInFavorite ? ACTIVE_ATRIBUTE : ``} class="film-details__control-input visually-hidden" id="favorite" name="favorite">
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
     </div>
@@ -148,6 +150,10 @@ export default class DetailInfo extends AbstractView {
     super();
     this._filmData = filmData;
     this._clickHandler = this._clickHandler.bind(this);
+    this._markWatchedHandler = this._markWatchedHandler.bind(this);
+    this._addToWatchListHandler = this._addToWatchListHandler.bind(this);
+    this._addToFavoriteHandler = this._addToFavoriteHandler.bind(this);
+    this._updateCommentCount = this._updateCommentCount.bind(this);
   }
 
   getTemplate() {
@@ -159,15 +165,94 @@ export default class DetailInfo extends AbstractView {
     this._callback.closeDetailInfo();
   }
 
+  _inputChangeHandler(evt) {
+    evt.preventDefault();
+    this._callback.updateInfo();
+  }
+
   setCloseBtnClickHandler(callback) {
     this._callback.closeDetailInfo = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
 
+  setInputChange(callback) {
+    this._callback.updateInfo = callback;
+    this.getElement().querySelectorAll(`.film-details__controls input[type='checkbox']`).forEach((input) => {
+      input.addEventListener(`change`, this._inputChangeHandler);
+    });
+  }
+
   renderComments() {
     const commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
+    this._commentContainer = commentsContainer;
     this._filmData.comments.forEach((comment) => {
       render(commentsContainer, new Comment(comment), renderPosition.BEFOREEND);
+    });
+  }
+
+  _markWatchedHandler(evt) {
+    evt.preventDefault();
+    this._callback.markWatched();
+  }
+
+  _addToWatchListHandler(evt) {
+    evt.preventDefault();
+    this._callback.addToWatchList();
+  }
+
+  _addToFavoriteHandler(evt) {
+    evt.preventDefault();
+    this._callback.addToFavorite();
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.markWatched = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._markWatchedHandler);
+  }
+
+  setAddToWatchListHandler(callback) {
+    this._callback.addToWatchList = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._addToWatchListHandler);
+  }
+
+  setAddToFavoriteHandler(callback) {
+    this._callback.addToFavorite = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._addToFavoriteHandler);
+  }
+
+  _updateCommentCount(comments) {
+    this.getElement().querySelector(`.film-details__comments-count`).innerText = comments.length;
+  }
+
+  setEmojiClickHandler() {
+    const currentEmoji = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    this.getElement().querySelectorAll(`.film-details__emoji-item`).forEach((el) => {
+      el.addEventListener(`click`, (evt) => {
+        currentEmoji.innerHTML = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`;
+        this._selectedEmotion = evt.target.value;
+      });
+    });
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
+
+      if (evt.key === `Enter` && evt.ctrlKey && this._selectedEmotion !== undefined) {
+        const commentText = evt.target.value;
+        if (commentText.length) {
+          const comment = {
+            text: commentText,
+            emoji: {
+              path: `./images/emoji/${this._selectedEmotion}.png`,
+              alt: this._selectedEmotion,
+            },
+            author: `Вася`,
+            date: new Date(),
+          };
+          this._filmData.comments.push(comment);
+          render(this._commentContainer, new Comment(comment), renderPosition.BEFOREEND);
+          this._updateCommentCount(this._filmData.comments);
+          currentEmoji.childNodes[0].remove();
+          evt.target.value = ``;
+        }
+      }
     });
   }
 }

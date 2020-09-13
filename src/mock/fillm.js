@@ -18,6 +18,8 @@ const DURATION = {
   }
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateTitle = () => {
   const titles = [
     `Унесённые ветром`,
@@ -156,9 +158,9 @@ const generateFilmDate = () => {
       Math.random() * 60);
 };
 
-const generateCardMock = (id) => {
+const generateCardMock = () => {
   return {
-    id,
+    id: generateId(),
     title: generateTitle(),
     poster: generatePoster(),
     description: generateDescription(),
@@ -173,16 +175,16 @@ const generateCardMock = (id) => {
     releaseDate: generateFilmDate(),
     ageRating: randomInteger(7, 18),
     comments: getComments(randomInteger(1, 5)),
-    isInWatchList: false,
-    isFavorite: false,
     isWatched: false,
+    isInWatchList: false,
+    isInFavorite: false,
   };
 };
 
 export const getFilmCards = (amount) => {
   let result = [];
   for (let i = 0; i < amount; i++) {
-    result.push(generateCardMock(i));
+    result.push(generateCardMock());
   }
   return result;
 };

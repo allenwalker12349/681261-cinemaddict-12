@@ -38,7 +38,7 @@ export const generateCommentMock = () => {
     text: text[randomInteger(0, text.length - 1)],
     emoji: emoji[randomInteger(0, emoji.length - 1)],
     author: authors[randomInteger(0, authors.length - 1)],
-    date: new Date(), 
+    date: new Date(),
   };
 };
 

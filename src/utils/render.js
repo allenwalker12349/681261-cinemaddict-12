@@ -32,15 +32,6 @@ export const renderTemplate = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export const remove = (component) => {
-  if (!(component instanceof Abstract)) {
-    throw new Error(`Can remove only components`);
-  }
-
-  component.getElement().remove();
-  component.removeElement();
-};
-
 export const replace = (newChild, oldChild) => {
   if (oldChild instanceof Abstract) {
     oldChild = oldChild.getElement();
@@ -59,18 +50,11 @@ export const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-export const appendChild = (container, child) => {
-  if (child instanceof Abstract) {
-    child = child.getElement();
+export const remove = (component) => {
+  if (!(component instanceof Abstract)) {
+    throw new Error(`Can remove only components`);
   }
 
-  if (container instanceof Abstract) {
-    container = container.getElement();
-  }
-
-  if (container === null || child === null) {
-    throw new Error(`Can't append unexisting elements`);
-  }
-
-  container.appendChild(child);
+  component.getElement().remove();
+  component.removeElement();
 };

@@ -12,25 +12,40 @@ export default class FilmsContainer {
   constructor(filmsContainer) {
     this._filmsConainer = filmsContainer;
     this._filmPresenter = {};
+    this._renderedCardsCount = CARD_COUNT_PER_STEP;
 
     this._allCardsContainer = new AllFilmContainer();
     this._filmsUpcomung = new FilmList();
     this._cardsContainer = new CardsContainer();
     this._showMoreButton = new ShowMoreButton();
-    this._handleFilmChange = this._handleFilmChange.bind(this);
+
+    this._handleCardChange = this._handleCardChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(films) {
     this._filmsCard = films.slice();
+    this._sourceFilmCards = films.slice();
     this._renderFilmsContainer();
     this._renderFilmCards(this._filmsCard);
     this._showoreButton(this._filmsCard);
   }
 
-  _renderCard(film) {
-    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleFilmChange);
-    cardPresenter.init(film);
+  _handleModeChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
 
+  _handleCardChange(updatedCard) {
+    this._filmsCard = updateItem(this._filmsCard, updatedCard);
+    this._sourceFilmCards = updateItem(this._sourceFilmCards, updatedCard);
+    this._filmPresenter[updatedCard.id].init(updatedCard);
+  }
+
+  _renderCard(film) {
+    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleCardChange, this._handleModeChange);
+    cardPresenter.init(film);
     this._filmPresenter[film.id] = cardPresenter;
   }
 
@@ -41,15 +56,14 @@ export default class FilmsContainer {
   }
 
   _showoreButton(films) {
-    let renderedCardsCount = CARD_COUNT_PER_STEP;
     if (films.length > CARD_COUNT_PER_STEP) {
       render(this._filmsUpcomung, this._showMoreButton, renderPosition.BEFOREEND);
       this._showMoreButton.setClickHandler(() => {
         films
-        .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_PER_STEP)
+        .slice(this._renderedCardsCount, this._renderedCardsCount + CARD_COUNT_PER_STEP)
         .forEach((card) => this._renderCard(card));
-        renderedCardsCount += CARD_COUNT_PER_STEP;
-        if (renderedCardsCount >= films.length) {
+        this._renderedCardsCount += CARD_COUNT_PER_STEP;
+        if (this._renderedCardsCount >= films.length) {
           this._showMoreButton.getElement().remove();
         }
       });
@@ -62,8 +76,11 @@ export default class FilmsContainer {
     render(this._filmsUpcomung, this._cardsContainer, renderPosition.BEFOREEND);
   }
 
-  _handleFilmChange(updated) {
-    this._films = updateItem(this._filmsCard, updated);
-    this._filmPresenter[updated.id].init(updated);
+  _clearCardList() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
+    this._renderedCardsCount = CARD_COUNT_PER_STEP;
   }
 }

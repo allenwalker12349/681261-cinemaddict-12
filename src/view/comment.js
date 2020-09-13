@@ -29,11 +29,6 @@ export default class Comment extends AbstractView {
     return createCommentItem(this._comment);
   }
 
-  _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._callback.formSubmit(TaskEdit.parseDataToTask(this._data));
-  }
-
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);

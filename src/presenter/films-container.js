@@ -9,7 +9,8 @@ import {updateItem} from "../utils/common.js";
 const CARD_COUNT_PER_STEP = 5;
 
 export default class FilmsContainer {
-  constructor(filmsContainer) {
+  constructor(filmsContainer, cardsModel) {
+    this._cardsModel = cardsModel;
     this._filmsConainer = filmsContainer;
     this._filmPresenter = {};
     this._renderedCardsCount = CARD_COUNT_PER_STEP;
@@ -29,6 +30,10 @@ export default class FilmsContainer {
     this._renderFilmsContainer();
     this._renderFilmCards(this._filmsCard);
     this._showoreButton(this._filmsCard);
+  }
+
+  _getCards() {
+    return this._cardsModel.getTasks();
   }
 
   _handleModeChange() {

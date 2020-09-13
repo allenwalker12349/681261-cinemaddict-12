@@ -7,10 +7,13 @@ import Statistic from "./view/statistic.js";
 import {getFilmCards} from "./mock/fillm.js";
 import {render, renderPosition} from "./utils/render.js";
 import FilmsContainer from "./presenter/films-container.js";
+import CardModel from "./model/films.js";
 
 const CARDS_AMOUNT = 17;
 export const filmCards = getFilmCards(CARDS_AMOUNT);
 
+const cardModel = new CardModel();
+cardModel.setFilms(filmCards);
 
 // рендер хедера
 const siteHeader = document.querySelector(`.header`);
@@ -28,7 +31,7 @@ render(siteMain, new Sort().getElement(), renderPosition.BEFOREEND);
 
 // рендер карточек и контейнера с фильмами
 
-const filmsContainterPresenter = new FilmsContainer(siteMain);
+const filmsContainterPresenter = new FilmsContainer(siteMain, cardModel);
 filmsContainterPresenter.init(filmCards);
 
 const footerContainer = document.querySelector(`.footer__statistics`);

@@ -234,21 +234,22 @@ export default class DetailInfo extends AbstractView {
     });
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
 
-      if (evt.key === `Enter`) {
-
+      if (evt.key === `Enter` && evt.ctrlKey && this._selectedEmotion !== undefined) {
         const commentText = evt.target.value;
-        const comment = {
-          text: commentText,
-          emoji: {
-            path: `./images/emoji/${this._selectedEmotion}.png`,
-            alt: this._selectedEmotion,
-          },
-          author: `Вася`,
-          date: new Date(),
-        };
-        this._filmData.comments.push(comment);
-        render(this._commentContainer, new Comment(comment), renderPosition.BEFOREEND);
-        this._updateCommentCount(this._filmData.comments);
+        if (commentText.length) {
+          const comment = {
+            text: commentText,
+            emoji: {
+              path: `./images/emoji/${this._selectedEmotion}.png`,
+              alt: this._selectedEmotion,
+            },
+            author: `Вася`,
+            date: new Date(),
+          };
+          this._filmData.comments.push(comment);
+          render(this._commentContainer, new Comment(comment), renderPosition.BEFOREEND);
+          this._updateCommentCount(this._filmData.comments);
+        }
       }
     });
   }

@@ -249,6 +249,8 @@ export default class DetailInfo extends AbstractView {
           this._filmData.comments.push(comment);
           render(this._commentContainer, new Comment(comment), renderPosition.BEFOREEND);
           this._updateCommentCount(this._filmData.comments);
+          currentEmoji.childNodes[0].remove();
+          evt.target.value = ``;
         }
       }
     });

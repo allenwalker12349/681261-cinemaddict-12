@@ -32,7 +32,7 @@ render(siteMain, new Sort().getElement(), renderPosition.BEFOREEND);
 // рендер карточек и контейнера с фильмами
 
 const filmsContainterPresenter = new FilmsContainer(siteMain, cardModel);
-filmsContainterPresenter.init(filmCards);
+filmsContainterPresenter.init();
 
 const footerContainer = document.querySelector(`.footer__statistics`);
 render(footerContainer, new Statistic().getElement(), renderPosition.BEFOREEND);

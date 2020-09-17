@@ -2,7 +2,7 @@ import SiteProfileView from "./view/profile.js";
 import NavigationContainer from "./view/navigation-container.js";
 import NavigationList from "./view/navigation-list";
 import StatsButton from "./view/stats-button.js";
-import Sort from "./view/sort.js";
+
 import Statistic from "./view/statistic.js";
 import {getFilmCards} from "./mock/fillm.js";
 import {render, renderPosition} from "./utils/render.js";
@@ -25,9 +25,6 @@ render(siteMain, new NavigationContainer().getElement(), renderPosition.BEFOREEN
 const navigationContainer = siteMain.querySelector(`.main-navigation`);
 render(navigationContainer, new NavigationList().getElement(), renderPosition.BEFOREEND);
 render(navigationContainer, new StatsButton().getElement(), renderPosition.BEFOREEND);
-
-// рендер сортировки
-render(siteMain, new Sort().getElement(), renderPosition.BEFOREEND);
 
 // рендер карточек и контейнера с фильмами
 

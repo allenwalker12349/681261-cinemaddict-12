@@ -1,12 +1,9 @@
 import FilmCard from "../view/film-card.js";
 import DetailInfo from "../view/detail-info";
 import {render, renderPosition, replace, remove} from "../utils/render.js";
+import {Mode, UserAction, UpdateType} from "../const.js";
 
 const bodyElement = document.querySelector(`body`);
-const Mode = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `OPEN`
-};
 
 export default class FilmCardPresenter {
   constructor(cardConttainer, changeData, changeMode) {

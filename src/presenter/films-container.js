@@ -5,8 +5,11 @@ import {render, renderPosition} from "../utils/render.js";
 import ShowMoreButton from "../view/show-more-button.js";
 import FilmCardPresenter from "./film-card-presenter.js";
 import {SortType} from "../const.js";
+import Sort from "../view/sort.js";
+import {sortByDate, sortByRating} from "../utils/films.js";
 
 const CARD_COUNT_PER_STEP = 5;
+const siteMain = document.querySelector(`main`);
 
 export default class FilmsContainer {
   constructor(filmsContainer, cardsModel) {
@@ -23,21 +26,34 @@ export default class FilmsContainer {
 
     this._handleCardChange = this._handleCardChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init() {
+    this._renderFilmList();
+  }
+
+  _renderFilmList() {
+    this._renderSort();
     this._renderFilmsContainer();
     this._renderFilmCards(this._getCards().slice(this._renderedCardsCount, CARD_COUNT_PER_STEP));
     this._renderedCardsCount = CARD_COUNT_PER_STEP;
     this._showoreButton();
   }
 
+  _renderSort() {
+    this._sortComponent = new Sort();
+
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(siteMain, this._sortComponent, renderPosition.BEFOREEND);
+  }
+
   _getCards() {
     switch (this._currentSortType) {
       case SortType.RAITING:
-        return this._cardsModel.getFilms().slice().sort(sortCardRaiting);
+        return this._cardsModel.getFilms().slice().sort(sortByRating);
       case SortType.DATE:
-        return this._cardsModel.getFilms().slice().sort(sortCardDate);
+        return this._cardsModel.getFilms().slice().sort(sortByDate);
     }
     return this._cardsModel.getFilms();
   }
@@ -90,21 +106,24 @@ export default class FilmsContainer {
     render(this._filmsUpcomung, this._cardsContainer, renderPosition.BEFOREEND);
   }
 
-  _clearCardList() {
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._filmPresenter = {};
-    this._renderedCardsCount = CARD_COUNT_PER_STEP;
-  }
-
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
     this._currentSortType = sortType;
+    this._sortComponent.setActiveButton(this._currentSortType);
     this._clearCardList();
+    this._renderFilmCards(this._getCards().slice(this._renderedCardsCount, CARD_COUNT_PER_STEP));
+    this._renderedCardsCount = CARD_COUNT_PER_STEP;
     this._showoreButton();
+  }
+
+  _clearCardList() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
+    this._renderedCardsCount = CARD_COUNT_PER_STEP;
   }
 }

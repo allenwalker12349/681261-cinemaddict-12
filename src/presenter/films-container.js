@@ -99,7 +99,6 @@ export default class FilmsContainer {
     }
   }
 
-
   _renderFilmsContainer() {
     render(this._filmsConainer, this._allCardsContainer, renderPosition.BEFOREEND);
     render(this._allCardsContainer, this._filmsUpcomung, renderPosition.BEFOREEND);
@@ -114,8 +113,7 @@ export default class FilmsContainer {
     this._currentSortType = sortType;
     this._sortComponent.setActiveButton(this._currentSortType);
     this._clearCardList();
-    this._renderFilmCards(this._getCards().slice(this._renderedCardsCount, CARD_COUNT_PER_STEP));
-    this._renderedCardsCount = CARD_COUNT_PER_STEP;
+    this._handelShowMoreButtonClick();
     this._showoreButton();
   }
 
@@ -124,6 +122,6 @@ export default class FilmsContainer {
       .values(this._filmPresenter)
       .forEach((presenter) => presenter.destroy());
     this._filmPresenter = {};
-    this._renderedCardsCount = CARD_COUNT_PER_STEP;
+    this._renderedCardsCount = 0;
   }
 }

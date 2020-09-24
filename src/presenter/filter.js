@@ -1,7 +1,7 @@
-import MainNavigationView from "../view/main-navigation.js";
+import MainNavigationView from "../view/navigation-list";
 import {FilterType, UpdateType} from "../const.js";
 import {filter} from "../utils/filter.js";
-import {render, RenderPosition, replace, remove} from "../utils/render.js";
+import {render, renderPosition, replace, remove} from "../utils/render.js";
 import {capitalizeFirstLetter} from "../utils/common.js";
 
 export default class Filter {
@@ -29,7 +29,7 @@ export default class Filter {
     this._mainNavigationComponent.setFilterTypeClickHandler(this._handleFilterTypeChange);
 
     if (prevMainNavigationComponent === null) {
-      render(this._filterContainer, this._mainNavigationComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._mainNavigationComponent, renderPosition.BEFOREEND);
       return;
     }
     replace(this._mainNavigationComponent, prevMainNavigationComponent);

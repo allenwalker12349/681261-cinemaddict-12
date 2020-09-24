@@ -4,16 +4,18 @@ import CardsContainer from "../view/cards-container.js";
 import {render, renderPosition} from "../utils/render.js";
 import ShowMoreButton from "../view/show-more-button.js";
 import FilmCardPresenter from "./film-card-presenter.js";
-import {SortType} from "../const.js";
 import Sort from "../view/sort.js";
 import {sortByDate, sortByRating} from "../utils/films.js";
+import {SortType, UserAction, UpdateType} from "../const.js";
+import {filter} from "../utils/filter.js";
 
 const CARD_COUNT_PER_STEP = 5;
 const siteMain = document.querySelector(`main`);
 
 export default class FilmsContainer {
-  constructor(filmsContainer, cardsModel) {
+  constructor(filmsContainer, cardsModel, filterModel) {
     this._cardsModel = cardsModel;
+    this._filterModel = filterModel;
     this._filmsConainer = filmsContainer;
     this._filmPresenter = {};
     this._renderedCardsCount = 0;
@@ -25,8 +27,13 @@ export default class FilmsContainer {
     this._showMoreButton = new ShowMoreButton();
 
     this._handleCardChange = this._handleCardChange.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
+    this._cardsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -49,13 +56,17 @@ export default class FilmsContainer {
   }
 
   _getCards() {
+    const filterType = this._filterModel.getFilter();
+    const cards = this._cardsModel.getFilms();
+    const filtredCards = filter[filterType](cards);
+
     switch (this._currentSortType) {
       case SortType.RAITING:
-        return this._cardsModel.getFilms().slice().sort(sortByRating);
+        return filtredCards.sort(sortByRating);
       case SortType.DATE:
-        return this._cardsModel.getFilms().slice().sort(sortByDate);
+        return filtredCards.sort(sortByDate);
     }
-    return this._cardsModel.getFilms();
+    return filtredCards;
   }
 
   _handleModeChange() {
@@ -69,7 +80,7 @@ export default class FilmsContainer {
   }
 
   _renderCard(film) {
-    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleCardChange, this._handleModeChange);
+    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleViewAction, this._handleModeChange);
     cardPresenter.init(film);
     this._filmPresenter[film.id] = cardPresenter;
   }
@@ -123,5 +134,36 @@ export default class FilmsContainer {
       .forEach((presenter) => presenter.destroy());
     this._filmPresenter = {};
     this._renderedCardsCount = 0;
+  }
+
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_FILM:
+        this._cardsModel.updateFilm(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+
+      case UpdateType.PATCH:
+        // обновляет карточку
+        this._filmPresenter[data.id].init(data);
+        break;
+
+      case UpdateType.MINOR:
+        // - обновить список
+        this._clearCardList();
+        this._handelShowMoreButtonClick();
+        this._showoreButton();
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску
+        this._clearCardList({resetRenderedFilmCount: true, resetSortType: true});
+        this._handelShowMoreButtonClick();
+        this._showoreButton();
+        break;
+    }
   }
 }

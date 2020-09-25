@@ -13,9 +13,10 @@ const CARD_COUNT_PER_STEP = 5;
 const siteMain = document.querySelector(`main`);
 
 export default class FilmsContainer {
-  constructor(filmsContainer, cardsModel, filterModel) {
+  constructor(filmsContainer, cardsModel, filterModel, commentsModel) {
     this._cardsModel = cardsModel;
     this._filterModel = filterModel;
+    this._commentsModel = commentsModel;
     this._filmsConainer = filmsContainer;
     this._filmPresenter = {};
     this._renderedCardsCount = 0;
@@ -80,7 +81,7 @@ export default class FilmsContainer {
   }
 
   _renderCard(film) {
-    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleViewAction, this._handleModeChange);
+    const cardPresenter = new FilmCardPresenter(this._cardsContainer, this._handleViewAction, this._handleModeChange, this._commentsModel);
     cardPresenter.init(film);
     this._filmPresenter[film.id] = cardPresenter;
   }

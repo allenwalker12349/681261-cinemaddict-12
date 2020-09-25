@@ -7,6 +7,8 @@ export function randomInteger(a, b) {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 }
 
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 export const getRandomArrayEl = (array) => {
   return array[randomInteger(0, array.length - 1)];
 };

@@ -1,12 +1,10 @@
 import AbstractView from "./abstract.js";
-import Comment from "../view/comment.js";
-import {render, renderPosition} from "../utils/render.js";
 
 const ACTIVE_ATRIBUTE = `checked`;
 
 const createDetailInfo = (cardData) => {
   const {title, poster, description, raiting, duration, genre, originTitle, director, actors, writers,
-    country, releaseDate, ageRating, comments, isWatched, isInWatchList, isInFavorite} = cardData;
+    country, releaseDate, ageRating, isWatched, isInWatchList, isInFavorite} = cardData;
 
   let genreString = `Genre`;
   if (genre.length > 1) {
@@ -105,10 +103,6 @@ const createDetailInfo = (cardData) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-
-        <ul class="film-details__comments-list">
-        </ul>
 
         <div class="film-details__new-comment">
           <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -182,14 +176,6 @@ export default class DetailInfo extends AbstractView {
     });
   }
 
-  renderComments() {
-    const commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
-    this._commentContainer = commentsContainer;
-    this._filmData.comments.forEach((comment) => {
-      render(commentsContainer, new Comment(comment), renderPosition.BEFOREEND);
-    });
-  }
-
   _markWatchedHandler(evt) {
     evt.preventDefault();
     this._callback.markWatched();
@@ -222,37 +208,5 @@ export default class DetailInfo extends AbstractView {
 
   _updateCommentCount(comments) {
     this.getElement().querySelector(`.film-details__comments-count`).innerText = comments.length;
-  }
-
-  setEmojiClickHandler() {
-    const currentEmoji = this.getElement().querySelector(`.film-details__add-emoji-label`);
-    this.getElement().querySelectorAll(`.film-details__emoji-item`).forEach((el) => {
-      el.addEventListener(`click`, (evt) => {
-        currentEmoji.innerHTML = `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`;
-        this._selectedEmotion = evt.target.value;
-      });
-    });
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
-
-      if (evt.key === `Enter` && evt.ctrlKey && this._selectedEmotion !== undefined) {
-        const commentText = evt.target.value;
-        if (commentText.length) {
-          const comment = {
-            text: commentText,
-            emoji: {
-              path: `./images/emoji/${this._selectedEmotion}.png`,
-              alt: this._selectedEmotion,
-            },
-            author: `Вася`,
-            date: new Date(),
-          };
-          this._filmData.comments.push(comment);
-          render(this._commentContainer, new Comment(comment), renderPosition.BEFOREEND);
-          this._updateCommentCount(this._filmData.comments);
-          currentEmoji.childNodes[0].remove();
-          evt.target.value = ``;
-        }
-      }
-    });
   }
 }

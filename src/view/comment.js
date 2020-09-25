@@ -33,4 +33,16 @@ export default class Comment extends AbstractView {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
+
+  _commentDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(this._comment);
+  }
+
+  setCommentDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement()
+        .querySelector(`.film-details__comment-delete`)
+        .addEventListener(`click`, this._commentDeleteClickHandler);
+  }
 }

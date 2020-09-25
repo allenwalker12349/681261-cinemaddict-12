@@ -1,6 +1,6 @@
-import {randomInteger} from "../utils/common.js";
+import {randomInteger, generateId} from "../utils/common.js";
 
-export const generateCommentMock = () => {
+export const generateCommentMock = (id) => {
   const text = [
     `С пивом потянет`,
     `Книга лучше!`,
@@ -35,6 +35,8 @@ export const generateCommentMock = () => {
   ];
 
   return {
+    id: generateId(),
+    filmId: id,
     text: text[randomInteger(0, text.length - 1)],
     emoji: emoji[randomInteger(0, emoji.length - 1)],
     author: authors[randomInteger(0, authors.length - 1)],

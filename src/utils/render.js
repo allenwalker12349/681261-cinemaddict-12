@@ -1,57 +1,67 @@
-import Abstract from "../view/abstract.js";
+import AbstractView from "../view/abstract.js";
 
-export const renderPosition = {
+export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  BEFORE: `before`
 };
 
-export const render = (container, child, place) => {
-  if (container instanceof Abstract) {
+const {AFTERBEGIN, BEFOREEND, BEFORE} = RenderPosition;
+
+export const render = (container, element, place = BEFOREEND, targetElement) => {
+  if (container instanceof AbstractView) {
     container = container.getElement();
   }
 
-  if (child instanceof Abstract) {
-    child = child.getElement();
+  if (element instanceof AbstractView) {
+    element = element.getElement();
+  }
+
+  if (targetElement instanceof AbstractView) {
+    targetElement = targetElement.getElement();
   }
 
   switch (place) {
-    case renderPosition.AFTERBEGIN:
-      container.prepend(child);
+    case AFTERBEGIN:
+      container.prepend(element);
       break;
-    case renderPosition.BEFOREEND:
-      container.append(child);
+    case BEFOREEND:
+      container.append(element);
       break;
+    case BEFORE:
+      container.insertBefore(element, targetElement);
   }
 };
 
-export const renderTemplate = (container, template, place) => {
-  if (container instanceof Abstract) {
-    container = container.getElement();
-  }
+export const createElement = (markup) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = markup;
 
-  container.insertAdjacentHTML(place, template);
+  return newElement.firstElementChild;
 };
 
-export const replace = (newChild, oldChild) => {
-  if (oldChild instanceof Abstract) {
-    oldChild = oldChild.getElement();
+export const replace = (oldElement, newElement) => {
+  if (oldElement instanceof AbstractView) {
+    oldElement = oldElement.getElement();
   }
 
-  if (newChild instanceof Abstract) {
-    newChild = newChild.getElement();
+  if (newElement instanceof AbstractView) {
+    newElement = newElement.getElement();
   }
 
-  const parent = oldChild.parentElement;
-
-  if (parent === null || oldChild === null || newChild === null) {
+  if (oldElement === null || newElement === null) {
     throw new Error(`Can't replace unexisting elements`);
   }
 
-  parent.replaceChild(newChild, oldChild);
+  oldElement.replaceWith(newElement);
 };
 
 export const remove = (component) => {
-  if (!(component instanceof Abstract)) {
+  if (component === null) {
+    return;
+  }
+
+  if (!(component instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
   }
 

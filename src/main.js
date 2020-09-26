@@ -1,51 +1,72 @@
-import SiteProfileView from "./view/profile.js";
-import {generateCommentMock} from "./mock/comment";
-import CommentsModel from "./model/comments";
-import NavigationContainer from "./view/navigation-container.js";
-import StatsButton from "./view/stats-button.js";
-
-import Statistic from "./view/statistic.js";
-import {getFilmCards} from "./mock/fillm.js";
-import {render, renderPosition} from "./utils/render.js";
-import FilmsContainer from "./presenter/films-container.js";
-import CardModel from "./model/films.js";
+import TotalView from "./view/total.js";
+import ProfilePresenter from "./presenter/profile.js";
+import MovieListPresenter from "./presenter/movie-list.js";
+import NavigationPresenter from "./presenter/navigation.js";
+import MoviesModel from "./model/movies.js";
+import CommentsModel from "./model/comments.js";
 import FilterModel from "./model/filter.js";
-import FilterPresenter from "./presenter/filter";
+import {render} from "./utils/render.js";
+import {UpdateType} from "./const.js";
+import Api from "./api/api.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
-const CARDS_AMOUNT = 17;
-const MAX_COMMENT_AMOUNT = 5;
-export const filmCards = getFilmCards(CARDS_AMOUNT);
+const {INIT} = UpdateType;
+const AUTHORIZATION = `Basic JMhmdCQVOVrLZrMXn`;
+const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VERSION = `v4`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VERSION}`;
 
-const comments = [];
-filmCards.forEach((film) => {
-  const randomNumber = Math.round(Math.random() * MAX_COMMENT_AMOUNT);
-  const filmID = film.id;
-  const filmComments = new Array(randomNumber).fill().map(() => generateCommentMock(filmID));
-  filmComments.forEach((comment) => comments.push(comment));
-});
+const header = document.querySelector(`.header`);
+const main = document.querySelector(`.main`);
+const footer = document.querySelector(`.footer`);
 
+const api = new Api(SERVER_NAME, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
+const moviesModel = new MoviesModel();
 const commentsModel = new CommentsModel();
-commentsModel.setComments(comments);
-
-const cardModel = new CardModel();
-cardModel.setFilms(filmCards);
-
 const filterModel = new FilterModel();
 
-// рендер хедера
-const siteHeader = document.querySelector(`.header`);
-render(siteHeader, new SiteProfileView().getElement(), renderPosition.BEFOREEND);
+const profilePresenter = new ProfilePresenter(header, moviesModel);
+const movieListPresenter = new MovieListPresenter({movieListContainer: main, moviesModel, commentsModel, filterModel, apiWithProvider, api});
+const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel, movieListPresenter);
 
-// рендер навигации
-const siteMain = document.querySelector(`main`);
+movieListPresenter.init();
+navigationPresenter.init();
 
-const filterPresenter = new FilterPresenter(siteMain, filterModel, cardModel);
-filterPresenter.init();
+let films = [];
+apiWithProvider.getMovies()
+  .then((movies) => {
+    films = movies;
+    return movies;
+  })
+  .then((movies) => movies.map((film) => api.getComments(film.id)))
+  .then((comments) => Promise.all(comments))
+  .then((allcomments) => {
+    commentsModel.setComments(allcomments);
+    moviesModel.setMovies(INIT, films);
+    profilePresenter.init();
+    render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+  })
+  .catch(() => {
+    commentsModel.setComments([]);
+    moviesModel.setMovies(INIT, []);
+    profilePresenter.init();
+    render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+  });
 
-// рендер карточек и контейнера с фильмами
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`);
+});
 
-const filmsContainterPresenter = new FilmsContainer(siteMain, cardModel, filterModel, commentsModel);
-filmsContainterPresenter.init();
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
 
-const footerContainer = document.querySelector(`.footer__statistics`);
-render(footerContainer, new Statistic().getElement(), renderPosition.BEFOREEND);
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

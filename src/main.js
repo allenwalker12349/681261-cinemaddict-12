@@ -12,7 +12,7 @@ import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
 const {INIT} = UpdateType;
-const AUTHORIZATION = `Basic JMhmdCQVOVrLZrMXn`;
+const AUTHORIZATION = `Basic OJdtfCDdfBdWZdFDh`;
 const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
 const STORE_PREFIX = `cinemaddict-localstorage`;
 const STORE_VERSION = `v4`;

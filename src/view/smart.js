@@ -1,46 +1,35 @@
-import Abstract from "./abstract";
+import AbstractView from "./abstract.js";
 
-export default class Smart extends Abstract {
+export default class Smart extends AbstractView {
   constructor() {
-    if (new.target === Abstract) {
-      throw new Error(`Can't instantiate Abstract, only concrete one.`);
-    }
     super();
     this._data = {};
   }
 
-  updateData(update, justDataUpdating) {
-    if (!update) {
+  updateData(newData, isUpdateDataOnly) {
+    if (!newData) {
       return;
     }
 
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
+    this._data = Object.assign({}, this._data, newData);
 
-    if (justDataUpdating) {
+    if (isUpdateDataOnly) {
       return;
     }
-
     this.updateElement();
   }
 
   updateElement() {
     let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
     this.removeElement();
-
     const newElement = this.getElement();
 
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null; // Чтобы окончательно "убить" ссылку на prevElement
-
+    prevElement.replaceWith(newElement);
+    prevElement = null;
     this.restoreHandlers();
   }
 
   restoreHandlers() {
-    throw new Error(`Abstract method not implemented: resetHandlers`);
+    throw new Error(`Abstract method not implemented: restoreHandlers`);
   }
 }

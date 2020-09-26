@@ -1,35 +1,72 @@
-import SiteProfileView from "./view/profile.js";
-import NavigationContainer from "./view/navigation-container.js";
-import NavigationList from "./view/navigation-list";
-import StatsButton from "./view/stats-button.js";
-import Sort from "./view/sort.js";
-import Statistic from "./view/statistic.js";
-import {getFilmCards} from "./mock/fillm.js";
-import {render, renderPosition} from "./utils/render.js";
-import FilmsContainer from "./presenter/films-container.js";
+import TotalView from "./view/total.js";
+import ProfilePresenter from "./presenter/profile.js";
+import MovieListPresenter from "./presenter/movie-list.js";
+import NavigationPresenter from "./presenter/navigation.js";
+import MoviesModel from "./model/movies.js";
+import CommentsModel from "./model/comments.js";
+import FilterModel from "./model/filter.js";
+import {render} from "./utils/render.js";
+import {UpdateType} from "./const.js";
+import Api from "./api/api.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
-const CARDS_AMOUNT = 17;
-export const filmCards = getFilmCards(CARDS_AMOUNT);
+const {INIT} = UpdateType;
+const AUTHORIZATION = `Basic OJdtfCDdfBdWZdFDh`;
+const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VERSION = `v4`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VERSION}`;
 
+const header = document.querySelector(`.header`);
+const main = document.querySelector(`.main`);
+const footer = document.querySelector(`.footer`);
 
-// рендер хедера
-const siteHeader = document.querySelector(`.header`);
-render(siteHeader, new SiteProfileView().getElement(), renderPosition.BEFOREEND);
+const api = new Api(SERVER_NAME, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
-// рендер навигации
-const siteMain = document.querySelector(`main`);
-render(siteMain, new NavigationContainer().getElement(), renderPosition.BEFOREEND);
-const navigationContainer = siteMain.querySelector(`.main-navigation`);
-render(navigationContainer, new NavigationList().getElement(), renderPosition.BEFOREEND);
-render(navigationContainer, new StatsButton().getElement(), renderPosition.BEFOREEND);
+const moviesModel = new MoviesModel();
+const commentsModel = new CommentsModel();
+const filterModel = new FilterModel();
 
-// рендер сортировки
-render(siteMain, new Sort().getElement(), renderPosition.BEFOREEND);
+const profilePresenter = new ProfilePresenter(header, moviesModel);
+const movieListPresenter = new MovieListPresenter({movieListContainer: main, moviesModel, commentsModel, filterModel, apiWithProvider, api});
+const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel, movieListPresenter);
 
-// рендер карточек и контейнера с фильмами
+movieListPresenter.init();
+navigationPresenter.init();
 
-const filmsContainterPresenter = new FilmsContainer(siteMain);
-filmsContainterPresenter.init(filmCards);
+let films = [];
+apiWithProvider.getMovies()
+  .then((movies) => {
+    films = movies;
+    return movies;
+  })
+  .then((movies) => movies.map((film) => api.getComments(film.id)))
+  .then((comments) => Promise.all(comments))
+  .then((allcomments) => {
+    commentsModel.setComments(allcomments);
+    moviesModel.setMovies(INIT, films);
+    profilePresenter.init();
+    render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+  })
+  .catch(() => {
+    commentsModel.setComments([]);
+    moviesModel.setMovies(INIT, []);
+    profilePresenter.init();
+    render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+  });
 
-const footerContainer = document.querySelector(`.footer__statistics`);
-render(footerContainer, new Statistic().getElement(), renderPosition.BEFOREEND);
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
